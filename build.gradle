@@ -20,6 +20,10 @@ configurations {
 
 repositories {
     mavenCentral()
+
+    maven {
+        url = uri("https://github.com/newkayak12/privateRepo/tree/master/snapshots")
+    }
 }
 
 ext {
@@ -27,10 +31,16 @@ ext {
 }
 
 dependencies {
+    implementation("org.newkayak:fileUpload:1.0.2")
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+//Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+
+//SpringBoot Starter
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -43,11 +53,17 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 
-
+//Hibernate & QueryDSL
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-core'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor "com.querydsl:querydsl-apt"
+
+//ModelMapper
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+//JSR310
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
 }
 
 
