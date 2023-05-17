@@ -24,7 +24,7 @@ public class UserController {
         try {
             result = boardFeign.getFaq();
         } catch ( Exception e ){
-
+            e.printStackTrace();
         }
         return "HELLO"+ result;
     }
