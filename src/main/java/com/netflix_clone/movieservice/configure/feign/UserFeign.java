@@ -7,6 +7,4 @@ import org.springframework.stereotype.Component;
 @Component
 @Qualifier(value = "user")
 @FeignClient(name = "netflix-clone-user-service")
-public interface UserFeign{
-
-}
+public interface UserFeign {}
