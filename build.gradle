@@ -23,10 +23,15 @@ ext {
 }
 
 dependencies {
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+//Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+
+//SpringBoot Starter
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
@@ -39,11 +44,14 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 
-
+//Hibernate & QueryDSL
     implementation 'com.querydsl:querydsl-jpa'
     implementation 'com.querydsl:querydsl-core'
     implementation 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor "com.querydsl:querydsl-apt"
+
+//ModelMapper
+    implementation 'org.modelmapper:modelmapper:3.1.1'
 
 }
 
