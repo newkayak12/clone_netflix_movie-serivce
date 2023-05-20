@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * A DTO for the {@link com.netflix_clone.movieservice.repository.entity.Category} entity
+ * A DTO for the {@link com.netflix_clone.movieservice.repository.domain.Category} entity
  */
 @Data
 public class CategoryDto implements Serializable {

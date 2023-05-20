@@ -1,4 +1,4 @@
-package com.netflix_clone.movieservice.repository.entity;
+package com.netflix_clone.movieservice.repository.domain;
 
 import javax.persistence.*;
 
