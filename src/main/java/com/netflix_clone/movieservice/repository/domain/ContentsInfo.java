@@ -33,8 +33,8 @@ public class ContentsInfo {
     private LocalDateTime serviceDueDate;
     @Column(name = "storedLocation", columnDefinition = "VARCHAR(500)")
     private String storedLocation;
-    @Column(name = "watchCount", columnDefinition = "INT(11) default 0")
-    private Integer watchCount;
+    @Column(name = "watchCount", columnDefinition = "BIGINT(20) default 0")
+    private Long watchCount;
 
     @OneToMany(mappedBy = "contentsInfo")
     private List<ContentPerson> contentPeople;

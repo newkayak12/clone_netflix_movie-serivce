@@ -2,13 +2,11 @@ package com.netflix_clone.movieservice.configure.modelMapper;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import javax.management.modelmbean.ModelMBean;
-
-@Configurable(value = "modelMapper")
+@Configuration(value = "modelMapper_configuration")
 public class Config {
     private ModelMapper modelMapper = new ModelMapper();
 

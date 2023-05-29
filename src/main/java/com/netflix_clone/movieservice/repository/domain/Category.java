@@ -11,7 +11,7 @@ public class Category {
     private Long categoryNo;
 
     @ManyToOne
-    @JoinColumn(name = "parentNo", referencedColumnName = "categoryNo", nullable = true)
+    @JoinColumn(name = "parentNo", referencedColumnName = "categoryNo", nullable = true, columnDefinition = "ON DELETE CASCADE")
     private Category parentCategory;
 
     @Column(name = "name", columnDefinition = "VARCHAR(200)")

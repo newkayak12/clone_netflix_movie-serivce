@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
  * Created on 2023-05-12
  * Project user-service
  */
-@Configuration(value = "Feign")
+@Configuration(value = "feign_configuration")
 @EnableFeignClients
 public class Config {
 }

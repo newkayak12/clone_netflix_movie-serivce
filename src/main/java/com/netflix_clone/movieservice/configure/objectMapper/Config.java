@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 
-@Configurable(value = "objectMapper")
+@Configurable(value = "objectMapper_configuration")
 public class Config {
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,10 +40,15 @@ public class Config {
     }
 
 
+    private void setJavaModule() {
+        this.objectMapper.registerModule(new JavaTimeModule());
+    }
+
     @Bean
     public ObjectMapper objectMapper () {
         this.deserializeSettings();
         this.serializeSettings();
+        this.setJavaModule();
         return this.objectMapper;
     }
 }

@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
  * Created on 2023-05-18
  * Project user-service
  */
-@Configuration(value = "querydsl")
+@Configuration(value = "querydsl_configuration")
 @RequiredArgsConstructor
 public class Config {
     private final EntityManager entityManager;

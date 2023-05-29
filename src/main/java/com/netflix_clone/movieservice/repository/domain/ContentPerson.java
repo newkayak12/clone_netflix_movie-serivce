@@ -1,6 +1,7 @@
 package com.netflix_clone.movieservice.repository.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "contentPerson")
 @Entity
