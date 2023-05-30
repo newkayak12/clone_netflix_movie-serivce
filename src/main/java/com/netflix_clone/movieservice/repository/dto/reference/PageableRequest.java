@@ -11,4 +11,5 @@ public class PageableRequest {
     private Integer page;
     private Integer limit;
     private Long tableNo;
+    private String searchText;
 }

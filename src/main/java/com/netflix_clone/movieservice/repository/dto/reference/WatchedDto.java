@@ -24,6 +24,13 @@ public class WatchedDto implements Serializable {
 
 
     @QueryProjection
+    public WatchedDto(Long watchedNo, LocalDateTime lastWatchedDate, LocalTime watchedAt) {
+        this.watchedNo = watchedNo;
+        this.lastWatchedDate = lastWatchedDate;
+        this.watchedAt = watchedAt;
+    }
+
+    @QueryProjection
     public WatchedDto(Long watchedNo, ContentsInfoDto contentsInfo, LocalDateTime lastWatchedDate, LocalTime watchedAt) {
         this.watchedNo = watchedNo;
         this.contentsInfo = contentsInfo;

@@ -1,5 +1,7 @@
 package com.netflix_clone.movieservice.service;
 
+import com.netflix_clone.movieservice.exceptions.BecauseOf;
+import com.netflix_clone.movieservice.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.categoryRepository.CategoryRepository;
 import com.netflix_clone.movieservice.repository.domain.Category;
 import com.netflix_clone.movieservice.repository.dto.reference.CategoryDto;
@@ -36,5 +38,10 @@ public class CategoryService {
     public Boolean save(SaveCategory request) {
         Category category = mapper.map(request, Category.class);
         return Optional.ofNullable(repository.save(category)).map(Objects::nonNull).orElseGet(() -> false);
+    }
+
+    public Boolean remove(Long categoryNo) throws CommonException {
+        if(repository.isCategoryUsed(categoryNo)) throw new CommonException(BecauseOf.CANNOT_DELETE);
+        return repository.remove(categoryNo);
     }
 }

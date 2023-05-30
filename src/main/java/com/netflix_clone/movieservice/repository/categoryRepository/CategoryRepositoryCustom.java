@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CategoryRepositoryCustom {
     PageImpl<CategoryDto> categories(Pageable pageable, CategoryRequest request);
+    Boolean isCategoryUsed(Long categoryNo);
+    Boolean remove(Long categoryNo);
 }
