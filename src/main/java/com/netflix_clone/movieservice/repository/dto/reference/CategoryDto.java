@@ -25,6 +25,12 @@ public class CategoryDto implements Serializable {
     }
 
     @QueryProjection
+    public CategoryDto(Long categoryNo, String name) {
+        this.categoryNo = categoryNo;
+        this.name = name;
+    }
+
+    @QueryProjection
     public CategoryDto(Long categoryNo, CategoryDto parentCategory, String name, Boolean isLeaf) {
         this.categoryNo = categoryNo;
         this.parentCategory = parentCategory;

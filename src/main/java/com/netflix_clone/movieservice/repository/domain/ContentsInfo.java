@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.domain;
 
+import com.netflix_clone.movieservice.enums.ContentType;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -25,6 +26,9 @@ public class ContentsInfo {
     private String description;
     @Column(name = "releaseDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP()")
     private LocalDateTime releaseDate;
+    @Column(name = "contentType", columnDefinition = "VARCHAR(50)")
+    @Enumerated(EnumType.STRING)
+    private ContentType contentType;
     @Column(name = "duration", columnDefinition = "TIME")
     private LocalTime duration;
     @Column(name = "regDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP()")
@@ -38,4 +42,7 @@ public class ContentsInfo {
 
     @OneToMany(mappedBy = "contentsInfo")
     private List<ContentPerson> contentPeople;
+
+    @OneToMany(mappedBy = "contentsInfo")
+    private List<ContentsDetail> details;
 }

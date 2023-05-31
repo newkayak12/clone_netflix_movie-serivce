@@ -37,6 +37,7 @@ public class WatchedRepositoryImpl extends QuerydslRepositorySupport implements 
                                 contentsInfo.title,
                                 contentsInfo.description,
                                 contentsInfo.releaseDate,
+                                contentsInfo.contentType,
                                 contentsInfo.duration,
                                 contentsInfo.regDate,
                                 contentsInfo.serviceDueDate,
