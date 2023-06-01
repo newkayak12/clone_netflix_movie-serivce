@@ -3,11 +3,11 @@ package com.netflix_clone.movieservice.controller;
 import com.netflix_clone.movieservice.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,8 +26,16 @@ public class ContentsController {
     }
 
     //TODO : 영상 스트리밍 공부하기
-    @PatchMapping(value = "/{contentsNo:[\\d]+}")
-    public ResponseEntity<FileSystemResource> stream(@PathVariable Long contentsNo){
-        return new ResponseEntity(null, HttpStatus.OK);
+    @GetMapping(value = "/{contentsNo:[\\d]+}/{detailNo:[\\d]+}")
+    public ResponseEntity<ResourceRegion> stream(@RequestHeader HttpHeaders headers,
+                                                 @PathVariable(required = true) Long contentsNo,
+                                                 @PathVariable(required = false) Long detailNo) throws CommonException {
+
+
+        ResourceRegion resource = service.stream(headers,contentsNo, detailNo);
+        return  ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .contentType(MediaTypeFactory.getMediaType(resource.getResource())
+                        .orElse(MediaType.APPLICATION_OCTET_STREAM)
+                ).body(resource);
     }
 }

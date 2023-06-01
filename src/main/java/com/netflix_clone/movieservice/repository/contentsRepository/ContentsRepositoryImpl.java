@@ -1,14 +1,12 @@
 package com.netflix_clone.movieservice.repository.contentsRepository;
 
 import com.netflix_clone.movieservice.repository.domain.ContentsInfo;
-import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
-import com.netflix_clone.movieservice.repository.dto.reference.QCategoryDto;
-import com.netflix_clone.movieservice.repository.dto.reference.QContentsDetailDto;
-import com.netflix_clone.movieservice.repository.dto.reference.QContentsInfoDto;
+import com.netflix_clone.movieservice.repository.dto.reference.*;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,13 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.netflix_clone.movieservice.repository.domain.QContentsInfo.contentsInfo;
 import static com.netflix_clone.movieservice.repository.domain.QCategory.category;
 import static com.netflix_clone.movieservice.repository.domain.QContentsDetail.contentsDetail;
+import static com.netflix_clone.movieservice.repository.domain.QPerson.person;
+import static com.netflix_clone.movieservice.repository.domain.QContentPerson.contentPerson;
 public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements ContentsRepositoryCustom{
     private JPQLQueryFactory query;
 
@@ -70,27 +71,15 @@ public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public ContentsInfoDto content(Long contentNo) {
-        return query.select(
-                new QContentsInfoDto(
-                        contentsInfo.contentsNo,
-                        new QCategoryDto(
-                                category.categoryNo,
-                                category.name
-                        ),
-                        contentsInfo.title,
-                        contentsInfo.description,
-                        contentsInfo.releaseDate,
-                        contentsInfo.contentType,
-                        contentsInfo.duration,
-                        contentsInfo.regDate,
-                        contentsInfo.serviceDueDate,
-                        contentsInfo.storedLocation,
-                        contentsInfo.watchCount
-                        //TODO SubQuery -> List (Projection)
-                        // Detail, Person
-                )
-        ).where().fetchOne();
+    public ContentsInfo content(Long contentNo) {
+        return  from(contentsInfo)
+                            .leftJoin(contentsInfo.details, contentsDetail)
+                            .fetchJoin()
+                            .leftJoin(contentsInfo.contentPeople, contentPerson)
+                            .fetchJoin()
+                            .leftJoin(contentPerson.person, person)
+                            .fetchJoin()
+                            .fetchOne();
     }
 
 }

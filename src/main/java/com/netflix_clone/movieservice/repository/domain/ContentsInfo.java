@@ -1,6 +1,7 @@
 package com.netflix_clone.movieservice.repository.domain;
 
 import com.netflix_clone.movieservice.enums.ContentType;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -8,8 +9,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+
 @Table(name = "contentsInfo")
 @Entity
+@Getter
 public class ContentsInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +43,9 @@ public class ContentsInfo {
     @Column(name = "watchCount", columnDefinition = "BIGINT(20) default 0")
     private Long watchCount;
 
-    @OneToMany(mappedBy = "contentsInfo")
+    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY)
     private List<ContentPerson> contentPeople;
 
-    @OneToMany(mappedBy = "contentsInfo")
+    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY)
     private List<ContentsDetail> details;
 }
