@@ -1,10 +1,9 @@
 package com.netflix_clone.movieservice.service;
 
 
-import com.netflix_clone.movieservice.configure.feign.ImageFeign;
-import com.netflix_clone.movieservice.enums.FileType;
+import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
+import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
-import com.netflix_clone.movieservice.repository.dto.reference.FavoriteDto;
 import com.netflix_clone.movieservice.repository.dto.reference.PageableRequest;
 import com.netflix_clone.movieservice.repository.dto.reference.WatchedDto;
 import com.netflix_clone.movieservice.repository.watchedRepository.WatchedRepository;
@@ -16,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @Service
 @Slf4j

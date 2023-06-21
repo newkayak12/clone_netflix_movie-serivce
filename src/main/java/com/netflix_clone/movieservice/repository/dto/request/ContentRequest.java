@@ -1,6 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.request;
 
-import com.netflix_clone.movieservice.enums.ContentType;
+import com.netflix_clone.movieservice.component.enums.ContentType;
 import lombok.Data;
 import lombok.ToString;
 

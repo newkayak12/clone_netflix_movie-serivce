@@ -1,7 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
-import com.netflix_clone.movieservice.enums.ContentType;
-import com.netflix_clone.movieservice.repository.domain.ContentPerson;
+import com.netflix_clone.movieservice.component.enums.ContentType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;

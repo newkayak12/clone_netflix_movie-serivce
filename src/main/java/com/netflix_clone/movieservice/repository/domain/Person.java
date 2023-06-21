@@ -1,6 +1,6 @@
 package com.netflix_clone.movieservice.repository.domain;
 
-import com.netflix_clone.movieservice.enums.Role;
+import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.repository.dto.reference.FileDto;
 
 import javax.persistence.*;

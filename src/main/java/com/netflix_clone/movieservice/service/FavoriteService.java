@@ -1,9 +1,9 @@
 package com.netflix_clone.movieservice.service;
 
-import com.netflix_clone.movieservice.configure.feign.ImageFeign;
-import com.netflix_clone.movieservice.enums.FileType;
-import com.netflix_clone.movieservice.exceptions.BecauseOf;
-import com.netflix_clone.movieservice.exceptions.CommonException;
+import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
+import com.netflix_clone.movieservice.component.enums.FileType;
+import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
+import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.domain.Favorite;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.reference.FavoriteDto;
@@ -19,9 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
-import javax.swing.text.html.Option;
 import java.util.Objects;
 import java.util.Optional;
 

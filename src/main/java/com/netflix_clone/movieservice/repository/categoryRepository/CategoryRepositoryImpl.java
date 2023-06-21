@@ -31,8 +31,13 @@ public class CategoryRepositoryImpl extends QuerydslRepositorySupport implements
     @Override
     public PageImpl<CategoryDto> categories(Pageable pageable, CategoryRequest request) {
         BooleanBuilder builder = new BooleanBuilder();
-        if(Objects.nonNull(request.getCategoryNo())) builder.and(category.categoryNo.eq(category.parentCategory.categoryNo));
-        else builder.and(category.parentCategory.categoryNo.eq(request.getCategoryNo()));
+        if(Objects.nonNull(request.getCategoryNo())) {
+            builder.and(category.parentCategory.categoryNo.eq(request.getCategoryNo()));
+            builder.and(category.isLeaf.isTrue());
+        }
+        else  builder.and(category.categoryNo.eq(category.parentCategory.categoryNo));
+
+
 
         List<CategoryDto> list =  query.select(
                             new QCategoryDto(
@@ -57,11 +62,17 @@ public class CategoryRepositoryImpl extends QuerydslRepositorySupport implements
     public Boolean isCategoryUsed(Long categoryNo) {
            Long categoryCount = query.select()
                                      .from(category)
-                                     .where(category.parentCategory.categoryNo.eq(categoryNo))
+                                     .where(
+                                             category.parentCategory.categoryNo.eq(categoryNo)
+                                         .and(category.isLeaf.isTrue())
+                                     )
                                      .fetchCount();
            Long movieCount = query.select()
                                   .from(contentsInfo)
-                                  .where(contentsInfo.category.categoryNo.eq(categoryNo))
+                                  .leftJoin(contentsInfo.category, category)
+                                  .where(  category.parentCategory.categoryNo.eq(categoryNo)
+                                          .and(category.isLeaf.isTrue())
+                                  )
                                   .fetchCount();
         return  (categoryCount + movieCount) > 0L;
     }

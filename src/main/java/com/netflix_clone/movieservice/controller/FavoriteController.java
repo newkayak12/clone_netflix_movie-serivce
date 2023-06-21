@@ -1,7 +1,6 @@
 package com.netflix_clone.movieservice.controller;
 
-import com.netflix_clone.movieservice.exceptions.CommonException;
-import com.netflix_clone.movieservice.repository.domain.Favorite;
+import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.dto.reference.FavoriteDto;
 import com.netflix_clone.movieservice.repository.dto.reference.FavoriteWatchedDto;
 import com.netflix_clone.movieservice.repository.dto.reference.PageableRequest;

@@ -1,11 +1,11 @@
 package com.netflix_clone.movieservice.service;
 
-import com.netflix_clone.movieservice.configure.feign.ImageFeign;
-import com.netflix_clone.movieservice.constant.Constants;
-import com.netflix_clone.movieservice.enums.FileType;
-import com.netflix_clone.movieservice.enums.Role;
-import com.netflix_clone.movieservice.exceptions.BecauseOf;
-import com.netflix_clone.movieservice.exceptions.CommonException;
+import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
+import com.netflix_clone.movieservice.component.constant.Constants;
+import com.netflix_clone.movieservice.component.enums.FileType;
+import com.netflix_clone.movieservice.component.enums.Role;
+import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
+import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.contentsDetailRepository.ContentsDetailRepository;
 import com.netflix_clone.movieservice.repository.contentsRepository.ContentsRepository;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentPersonDto;

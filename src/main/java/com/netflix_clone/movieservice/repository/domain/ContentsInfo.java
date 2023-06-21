@@ -1,8 +1,7 @@
 package com.netflix_clone.movieservice.repository.domain;
 
-import com.netflix_clone.movieservice.enums.ContentType;
+import com.netflix_clone.movieservice.component.enums.ContentType;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -10,8 +10,9 @@ public class Category {
     @Column(name = "categoryNo")
     private Long categoryNo;
 
-    @ManyToOne
-    @JoinColumn(name = "parentNo", referencedColumnName = "categoryNo", nullable = true)
+    @ManyToOne()
+    @JoinColumn(name = "parentNo", referencedColumnName = "categoryNo",
+                nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Category parentCategory;
 
     @Column(name = "name", columnDefinition = "VARCHAR(200)")

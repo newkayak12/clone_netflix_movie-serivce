@@ -1,11 +1,9 @@
 package com.netflix_clone.movieservice.controller;
 
-import com.netflix_clone.movieservice.exceptions.CommonException;
+import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;

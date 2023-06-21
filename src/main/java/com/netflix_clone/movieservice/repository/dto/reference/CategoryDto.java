@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class CategoryDto implements Serializable {
     private Long categoryNo;
     private CategoryDto parentCategory;
