@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.component.configure.eureka;
 
+import com.netflix_clone.movieservice.component.configure.ConfigMsg;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,4 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration (value = "eureka_configuration")
 @EnableEurekaClient
 public class Config {
+    public Config() {
+        ConfigMsg.msg("Eureka");
+    }
 }

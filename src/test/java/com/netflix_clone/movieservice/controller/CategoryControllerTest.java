@@ -93,7 +93,7 @@ class CategoryControllerTest extends AbstractControllerTest {
             mockMvc.perform(
                         delete(String.format("%s/%d", prefix, 1))
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().is5xxServerError())
                 .andExpect(jsonPath("$").value(BecauseOf.CANNOT_DELETE.getMsg()));
         }
 

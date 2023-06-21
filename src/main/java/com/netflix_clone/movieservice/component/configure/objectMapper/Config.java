@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.netflix_clone.movieservice.component.configure.ConfigMsg;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 
@@ -11,6 +13,10 @@ import org.springframework.context.annotation.Bean;
 public class Config {
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    public Config() {
+        ConfigMsg.msg("ModelMapper");
+        objectMapper = new ObjectMapper();
+    }
     private void deserializeWhenEmptyCase() {
         this.objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
         this.objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
