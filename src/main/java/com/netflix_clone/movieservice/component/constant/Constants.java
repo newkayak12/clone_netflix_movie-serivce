@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 @Component(value = "constants")
 public class Constants {
 
-    public static String FILE_PATH;
+    public static String MOVIE_PATH;
 
-    @Value(value = "${constant.file-path}")
-    public static void setFilePath(String _FILE_PATH){ FILE_PATH = _FILE_PATH; }
+    @Value(value = "${constants.movie-path}")
+    public static void setFilePath(String _MOVIE_PATH){ MOVIE_PATH = _MOVIE_PATH; }
 
 
 }

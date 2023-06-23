@@ -34,7 +34,9 @@ public class CategoryService {
     }
 
     public Boolean save(SaveCategory request) {
+        if(!request.getIsLeaf()) request.setParentCategory(null);
         Category category = mapper.map(request, Category.class);
+
         return Optional.ofNullable(repository.save(category)).map(Objects::nonNull).orElseGet(() -> false);
     }
 

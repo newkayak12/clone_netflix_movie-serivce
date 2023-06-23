@@ -1,9 +1,12 @@
 package com.netflix_clone.movieservice.repository.domain;
 
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Table(name = "category")
 @Entity
+@ToString
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

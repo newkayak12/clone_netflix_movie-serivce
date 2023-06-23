@@ -96,7 +96,7 @@ public class ContentsService {
                 path = mapper.map(detailRepository.findContentsDetailByDetailNo(detailNo), ContentsDetailDto.class).getStoredLocation();
             }
 
-            UrlResource video = new UrlResource(Constants.FILE_PATH + path);
+            UrlResource video = new UrlResource(Constants.MOVIE_PATH + path);
             final long chunkSize = 1000000L;
             long contentLength = video.contentLength();
 

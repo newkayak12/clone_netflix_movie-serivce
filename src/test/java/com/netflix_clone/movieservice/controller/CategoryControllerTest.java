@@ -16,13 +16,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -65,13 +64,14 @@ class CategoryControllerTest extends AbstractControllerTest {
 
     @ParameterizedTest
     @DisplayName(value = "카테고리 등록")
-    @CsvFileSource(resources = "/csv/Category.csv", numLinesToSkip = 1)
-    void save(Long categoryNo, Boolean isLeaf, String name, Long parentNo) throws Exception {
+    @Transactional
+    @Rollback
+    @CsvFileSource(resources = {"/csv/parentNodeCategory.csv", "/csv/childNodeCategory.csv"}, numLinesToSkip = 1)
+    void save(Boolean isLeaf, String name, Long parentNo) throws Exception {
         SaveCategory request = new SaveCategory();
-        request.setCategoryNo(categoryNo);
         request.setIsLeaf(isLeaf);
         request.setName(name);
-        request.setParentCategory(new CategoryDto(parentNo));
+        if(!parentNo.equals(0)) request.setParentCategory(new CategoryDto(parentNo));
 
 
         mockMvc.perform(

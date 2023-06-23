@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * A DTO for the {@link com.netflix_clone.movieservice.repository.domain.Person} entity
@@ -16,6 +17,8 @@ public class PersonDto implements Serializable {
     private String name;
     private Role role;
 
+    private List<ContentsInfoDto> contentsInfoList;
+
     @Transient
     private FileDto file;
 
@@ -24,5 +27,13 @@ public class PersonDto implements Serializable {
         this.personNo = personNo;
         this.name = name;
         this.role = role;
+    }
+
+    @QueryProjection
+    public PersonDto(Long personNo, String name, Role role, List<ContentsInfoDto> contentsInfoList) {
+        this.personNo = personNo;
+        this.name = name;
+        this.role = role;
+        this.contentsInfoList = contentsInfoList;
     }
 }
