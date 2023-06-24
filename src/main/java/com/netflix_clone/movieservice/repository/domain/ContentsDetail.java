@@ -1,12 +1,21 @@
 package com.netflix_clone.movieservice.repository.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalTime;
 
 @Table(name = "contentsDetail")
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@Getter
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContentsDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +35,8 @@ public class ContentsDetail {
     @ManyToOne
     @JoinColumn(name = "contentsNo")
     private ContentsInfo contentsInfo;
+
+    public void attachFileLocation(String location){
+        this.storedLocation = location;
+    }
 }

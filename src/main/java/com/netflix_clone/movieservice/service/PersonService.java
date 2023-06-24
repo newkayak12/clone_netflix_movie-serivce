@@ -22,10 +22,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.Optional;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -49,7 +50,8 @@ public class PersonService {
             FileRequest fileRequest = new FileRequest();
             fileRequest.setRawFile(request.getRawFile());
             fileRequest.setTableNo(person.getPersonNo());
-            fileRequest.setFileType(type);
+            fileRequest.setFileType(type.name());
+
             imageFeign.save(fileRequest);
         }
 
@@ -61,7 +63,6 @@ public class PersonService {
         FileType type = person.getRole().equals(Role.DIRECTOR) ? FileType.DIRECTOR : FileType.ACTOR;
         imageFeign.remove(personNo, type);
         repository.delete(person);
-
         return true;
     }
 
@@ -82,6 +83,25 @@ public class PersonService {
 
     @Transactional(readOnly = true)
     public PersonDto person(Long personNo) throws CommonException {
-        return repository.person(personNo).orElseThrow(() -> new CommonException(BecauseOf.NO_DATA));
+        return repository.person(personNo)
+                .map( person -> {
+                    FileType type = person.getRole().equals(Role.DIRECTOR) ? FileType.DIRECTOR : FileType.ACTOR;
+                    FileDto file = Optional.ofNullable(imageFeign.file(person.getPersonNo(), type).getBody())
+                            .orElseGet(FileDto::new);
+                    person.setFile(file);
+
+                    if( Objects.isNull(person.getContentsInfoList()) ) person.setContentsInfoList(new ArrayList<>());
+
+                    person.getContentsInfoList().forEach(content ->
+                            content.setImages(
+                                    Optional.ofNullable(
+                                            imageFeign.files(content.getContentsNo(), FileType.THUMBNAIL).getBody()
+                                    ).orElseGet(LinkedList::new)
+                            )
+                    );
+
+                    return person;
+                })
+                .orElseThrow(() -> new CommonException(BecauseOf.NO_DATA));
     }
 }

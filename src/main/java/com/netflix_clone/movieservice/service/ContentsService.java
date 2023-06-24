@@ -2,20 +2,25 @@ package com.netflix_clone.movieservice.service;
 
 import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
 import com.netflix_clone.movieservice.component.constant.Constants;
+import com.netflix_clone.movieservice.component.enums.ContentType;
 import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.contentsDetailRepository.ContentsDetailRepository;
 import com.netflix_clone.movieservice.repository.contentsRepository.ContentsRepository;
-import com.netflix_clone.movieservice.repository.dto.reference.ContentPersonDto;
-import com.netflix_clone.movieservice.repository.dto.reference.ContentsDetailDto;
-import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
-import com.netflix_clone.movieservice.repository.dto.reference.PersonDto;
+import com.netflix_clone.movieservice.repository.domain.ContentPerson;
+import com.netflix_clone.movieservice.repository.domain.ContentsDetail;
+import com.netflix_clone.movieservice.repository.domain.ContentsInfo;
+import com.netflix_clone.movieservice.repository.dto.reference.*;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.newkayak.FileUpload.FileResult;
+import org.newkayak.FileUpload.FileUpload;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -40,6 +47,7 @@ public class ContentsService {
     private final ContentsDetailRepository detailRepository;
     private final ImageFeign imageFeign;
     private final ModelMapper mapper;
+    private final FileUpload upload;
 
     @Transactional(readOnly = true)
     public PageImpl<ContentsInfoDto> contents(ContentRequest request) {
@@ -122,5 +130,71 @@ public class ContentsService {
             throw new CommonException(BecauseOf.UNKNOWN_ERROR);
         }
         return resourceRegion;
+    }
+
+    public ContentsInfoDto saveContentInfo(SaveContentRequest request) {
+        ContentsInfo info = repository.save(mapper.map(request, ContentsInfo.class));
+        List<ContentPerson> persons = request.getPeopleNo()
+                                             .stream()
+                                             .map( peopleNo -> {
+                                                 ContentPersonDto dto = new ContentPersonDto();
+                                                 PersonDto personDto = new PersonDto();
+                                                 personDto.setPersonNo(peopleNo);
+                                                 dto.setPerson(personDto);
+                                                 dto.setContentsInfo(mapper.map(info, ContentsInfoDto.class));
+                                                 return mapper.map(dto, ContentPerson.class);
+                                             })
+                                             .collect(Collectors.toList());
+
+
+        if (Objects.nonNull(request.getRawFiles())) {
+            FileRequests fileRequest = new FileRequests();
+            fileRequest.setRawFiles(request.getRawFiles());
+            fileRequest.setTableNo(info.getContentsNo());
+            fileRequest.setFileType(FileType.CONTENTS.name());
+            imageFeign.saves(fileRequest);
+        }
+
+        return mapper.map(info, ContentsInfoDto.class);
+    }
+
+    public List<ContentsDetailDto> saveContentDetail(List<SaveDetailRequest> request) {
+        Stream<SaveDetailRequest> requestStream = request.stream().sequential();
+        if(request.size() >= 10) requestStream.parallel();
+        ContentsInfoDto infoDto = mapper.map(
+                repository.findContentsInfoByContentsNo(request.stream().findFirst().get().getContentsNo()),
+                ContentsInfoDto.class
+        );
+
+        return requestStream.map( element -> {
+         ContentsDetailDto detailDto = mapper.map(repository, ContentsDetailDto.class);
+         detailDto.setContentsInfo(infoDto);
+
+        ContentsDetail detail = detailRepository.save(mapper.map(detailDto, ContentsDetail.class));
+
+        FileRequest fileRequest = new FileRequest();
+        fileRequest.setRawFile(element.getRawFile());
+        fileRequest.setTableNo(detail.getDetailNo());
+        fileRequest.setFileType(FileType.THUMBNAIL.name());
+        imageFeign.save(fileRequest);
+
+
+        if(Objects.nonNull(element.getRawMovieFile())){
+            FileResult result = upload.upload(false, element.getRawMovieFile()).stream().findFirst().get();
+            detail.attachFileLocation(result.getStoredFileName());
+        }
+        //TODO :: MOVIE FILE
+
+        return mapper.map(detail, ContentsDetailDto.class);
+        }).collect(Collectors.toList());
+    }
+
+    public Boolean removeContentInfo(Long contentsNo) {
+        return true;
+    }
+
+    public Boolean removeDetail(Long detailNo) {
+
+        return true;
     }
 }

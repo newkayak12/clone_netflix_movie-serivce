@@ -3,7 +3,10 @@ package com.netflix_clone.movieservice.repository.dto.reference;
 import com.netflix_clone.movieservice.component.enums.FileType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 
@@ -13,6 +16,8 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class FileDto implements Serializable {
     private Long fileNo;
     private Long tableNo;

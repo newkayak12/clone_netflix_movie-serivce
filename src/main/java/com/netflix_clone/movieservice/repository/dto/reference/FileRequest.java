@@ -12,6 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class FileRequest extends FileDto {
+public class FileRequest {
+    private Long fileNo;
+    private Long tableNo;
+    private String fileType;
+    private String storedFileName;
+    private String originalFileName;
+    private Integer orders;
+    private String contentType;
+    private Long fileSize;
     private MultipartFile rawFile;
 }

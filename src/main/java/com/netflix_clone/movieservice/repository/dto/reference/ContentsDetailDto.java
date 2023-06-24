@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -26,6 +27,8 @@ public class ContentsDetailDto implements Serializable {
 
     @Transient
     private FileDto thumbnail;
+    @Transient
+    private MultipartFile rawFile;
 
     @QueryProjection
     public ContentsDetailDto(Long detailNo, Integer season, Integer episode,

@@ -2,6 +2,9 @@ package com.netflix_clone.movieservice.repository.domain;
 
 import com.netflix_clone.movieservice.component.enums.ContentType;
 import lombok.Getter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +15,9 @@ import java.util.List;
 @Table(name = "contentsInfo")
 @Entity
 @Getter
+@DynamicInsert
+@DynamicUpdate
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContentsInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

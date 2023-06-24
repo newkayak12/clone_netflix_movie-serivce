@@ -1,12 +1,18 @@
 package com.netflix_clone.movieservice.repository.domain;
 
 import lombok.ToString;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Table(name = "category")
 @Entity
 @ToString
+@DynamicInsert
+@DynamicUpdate
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

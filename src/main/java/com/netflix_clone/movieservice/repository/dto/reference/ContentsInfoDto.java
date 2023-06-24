@@ -33,6 +33,9 @@ public class ContentsInfoDto implements Serializable {
     private List<ContentsDetailDto> details;
 
     @Transient
+    private List<Long> peopleNo;
+
+    @Transient
     private List<FileDto> images;
 
 

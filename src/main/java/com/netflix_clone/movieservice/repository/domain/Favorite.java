@@ -1,10 +1,17 @@
 package com.netflix_clone.movieservice.repository.domain;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "favorite")
+@DynamicInsert
+@DynamicUpdate
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

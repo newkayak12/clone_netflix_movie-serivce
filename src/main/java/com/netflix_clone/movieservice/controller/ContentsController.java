@@ -1,18 +1,43 @@
 package com.netflix_clone.movieservice.controller;
 
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
+import com.netflix_clone.movieservice.repository.dto.reference.ContentsDetailDto;
+import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/api/v1/contents/")
 @RequiredArgsConstructor
 public class ContentsController {
     private final ContentsService service;
+
+    @PostMapping(value = "/save/info", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ContentsInfoDto> saveContentInfo(@ModelAttribute SaveContentRequest request){
+        return ResponseEntity.ok(service.saveContentInfo(request));
+    }
+    @PostMapping(value = "/save/detail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<List<ContentsDetailDto>> saveContentDetail(@ModelAttribute List<SaveDetailRequest> request){
+        return ResponseEntity.ok(service.saveContentDetail(request));
+    }
+    @DeleteMapping(value = "/info/{contentsNo:[\\d]+}")
+    public ResponseEntity<Boolean> removeContentInfo(@PathVariable Long contentsNo){
+        return ResponseEntity.ok(service.removeContentInfo(contentsNo));
+    }
+    @DeleteMapping(value = "/detail/{detailNo:[\\d]+}")
+    public ResponseEntity<Boolean> removeDetail(@PathVariable Long detailNo){
+        return ResponseEntity.ok(service.removeDetail(detailNo));
+    }
+
+
 
     @GetMapping(value = "/")
     public ResponseEntity contents(@ModelAttribute ContentRequest request){

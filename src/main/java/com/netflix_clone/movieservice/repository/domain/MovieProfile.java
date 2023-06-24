@@ -3,12 +3,16 @@ package com.netflix_clone.movieservice.repository.domain;
 
 
 import com.netflix_clone.movieservice.repository.dto.reference.FileDto;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "board_profile")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MovieProfile {
     @Id
     @Column(name = "profileNo", columnDefinition = "BIGINT(20)")
