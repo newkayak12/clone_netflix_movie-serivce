@@ -7,6 +7,7 @@ import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
+import com.netflix_clone.movieservice.repository.contentPersonRepository.ContentPersonRepository;
 import com.netflix_clone.movieservice.repository.contentsDetailRepository.ContentsDetailRepository;
 import com.netflix_clone.movieservice.repository.contentsRepository.ContentsRepository;
 import com.netflix_clone.movieservice.repository.domain.ContentPerson;
@@ -45,6 +46,7 @@ import java.util.stream.Stream;
 public class ContentsService {
     private final ContentsRepository repository;
     private final ContentsDetailRepository detailRepository;
+    private final ContentPersonRepository contentPersonRepository;
     private final ImageFeign imageFeign;
     private final ModelMapper mapper;
     private final FileUpload upload;
@@ -145,7 +147,7 @@ public class ContentsService {
                                                  return mapper.map(dto, ContentPerson.class);
                                              })
                                              .collect(Collectors.toList());
-
+        info.connectWithPerson(persons);
 
         if (Objects.nonNull(request.getRawFiles())) {
             FileRequests fileRequest = new FileRequests();
@@ -190,11 +192,22 @@ public class ContentsService {
     }
 
     public Boolean removeContentInfo(Long contentsNo) {
+        detailRepository.findContentsDetailByContentsInfo_ContentsNo(contentsNo)
+                        .forEach(detail -> {
+                            this.removeDetail(detail.getDetailNo());
+                        });
+        repository.deleteById(contentsNo);
+        imageFeign.remove(contentsNo, FileType.CONTENTS);
         return true;
     }
 
     public Boolean removeDetail(Long detailNo) {
+        ContentsDetail detail = detailRepository.findContentsDetailByDetailNo(detailNo);
+        detailRepository.delete(detail);
 
+        imageFeign.remove(detailNo, FileType.THUMBNAIL);
+        FileResult result = new FileResult(null, detail.getStoredLocation(), null, null);
+        upload.remove(result);
         return true;
     }
 }

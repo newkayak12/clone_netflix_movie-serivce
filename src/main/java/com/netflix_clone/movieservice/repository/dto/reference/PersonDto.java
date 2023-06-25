@@ -28,6 +28,8 @@ public class PersonDto implements Serializable {
     @Transient
     private FileDto file;
 
+
+
     @QueryProjection
     public PersonDto(Long personNo, String name, Role role) {
         this.personNo = personNo;

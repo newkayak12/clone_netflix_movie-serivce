@@ -48,9 +48,13 @@ public class ContentsInfo {
     @Column(name = "watchCount", columnDefinition = "BIGINT(20) default 0")
     private Long watchCount;
 
-    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<ContentPerson> contentPeople;
 
-    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "contentsInfo", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     private List<ContentsDetail> details;
+
+    public void connectWithPerson(List<ContentPerson> contentPeople){
+        this.contentPeople = contentPeople;
+    }
 }
