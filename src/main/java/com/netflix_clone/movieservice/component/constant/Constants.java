@@ -7,9 +7,8 @@ import org.springframework.stereotype.Component;
 public class Constants {
 
     public static String MOVIE_PATH;
-
-    @Value(value = "${constants.movie-path}")
-    public static void setFilePath(String _MOVIE_PATH){ MOVIE_PATH = _MOVIE_PATH; }
+    @Value(value = "${constants.movie_path}")
+    public void setFilePath(String _MOVIE_PATH){ MOVIE_PATH = _MOVIE_PATH; }
 
 
 }

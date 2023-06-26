@@ -6,25 +6,35 @@ import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.repository.dto.reference.CategoryDto;
 import com.netflix_clone.movieservice.repository.dto.reference.PersonDto;
 import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.util.AbstractControllerTest;
 import com.netflix_clone.movieservice.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.newkayak.FileUpload.FileResult;
 import org.newkayak.FileUpload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.util.MultiValueMap;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,19 +101,43 @@ class ContentsControllerTest extends AbstractControllerTest {
         }
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName(value = "detail 저장")
-    void saveContentDetail() {
-//        2,JS 에 대해서 알아보는 시간,,2023-06-25 11:31:13,2023-08-25 11:31:15,2122-06-25 11:31:15,,[제로초] 인간 JS 되기,0,101,TV
-//
-//        detailNo
-//        duration
-//        episode
-//        season
-//        storedLocation
-//        subTitle
-//        contentsNo
+    @ValueSource(ints = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16})
+    void saveContentDetail(int value) throws Exception {
+        mockMvc.perform(
+            this.generateRequest(value)
+        )
+        .andExpect(status().isOk());
 
+    }
+
+    MockHttpServletRequestBuilder generateRequest(int value){
+        try {
+            MockMultipartFile image = TestUtil.getMockMultiPartFile("/Users/sanghyeonkim/Downloads/R1280x0.png", "image", "rawFile");
+            MockMultipartFile movie = TestUtil.getMockMultiPartFile(
+                    String.format("/Users/sanghyeonkim/Downloads/port/netflixClone/source/zerocho_js/%s.mp4", (value < 10 ? "0" + (value) : value)),
+                    "video",
+                    "rawMovieFile"
+            );
+            MockMultipartHttpServletRequestBuilder builder = multipart(String.format("%s/save/detail", prefix));
+            builder
+                    .file(image)
+                    .file(movie)
+                    .param("season", "1")
+                    .param("episode", value + "")
+                    .param("subTitle", String.format("[ %s 강 ]", (value < 10 ? "0" + (value) : value)))
+                    //                .param(String.format("duration", )
+                    .param("contentsNo", "2");
+            builder.contentType(MediaType.MULTIPART_FORM_DATA);
+
+
+            return builder;
+        } catch (Exception e){
+
+        }
+
+        return null;
     }
 
     @Test

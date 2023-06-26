@@ -14,19 +14,17 @@ import com.netflix_clone.movieservice.repository.dto.request.PersonRequest;
 import com.netflix_clone.movieservice.repository.personRepository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
-import org.apache.tomcat.jni.File;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j

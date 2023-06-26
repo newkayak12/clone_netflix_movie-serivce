@@ -41,8 +41,7 @@ configurations {
 }
 
 dependencies {
-    implementation("org.newkayak:fileUpload:1.0.2")
-
+//    implementation("org.newkayak:fileUpload:1.0.2")
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 

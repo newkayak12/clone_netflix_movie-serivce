@@ -160,35 +160,32 @@ public class ContentsService {
         return mapper.map(info, ContentsInfoDto.class);
     }
 
-    public List<ContentsDetailDto> saveContentDetail(List<SaveDetailRequest> request) {
-        Stream<SaveDetailRequest> requestStream = request.stream().sequential();
-        if(request.size() >= 10) requestStream.parallel();
+    public ContentsDetailDto saveContentDetail(SaveDetailRequest request) {
         ContentsInfoDto infoDto = mapper.map(
-                repository.findContentsInfoByContentsNo(request.stream().findFirst().get().getContentsNo()),
+                repository.findContentsInfoByContentsNo(request.getContentsNo()),
                 ContentsInfoDto.class
         );
 
-        return requestStream.map( element -> {
-         ContentsDetailDto detailDto = mapper.map(repository, ContentsDetailDto.class);
+         ContentsDetailDto detailDto = mapper.map(request, ContentsDetailDto.class);
          detailDto.setContentsInfo(infoDto);
 
         ContentsDetail detail = detailRepository.save(mapper.map(detailDto, ContentsDetail.class));
 
         FileRequest fileRequest = new FileRequest();
-        fileRequest.setRawFile(element.getRawFile());
+        fileRequest.setRawFile(request.getRawFile());
         fileRequest.setTableNo(detail.getDetailNo());
         fileRequest.setFileType(FileType.THUMBNAIL.name());
         imageFeign.save(fileRequest);
 
 
-        if(Objects.nonNull(element.getRawMovieFile())){
-            FileResult result = upload.upload(false, element.getRawMovieFile()).stream().findFirst().get();
+        if(Objects.nonNull(request.getRawMovieFile())){
+            log.warn("PATH {}", Constants.MOVIE_PATH);
+            FileResult result = upload.upload(false, request.getRawMovieFile()).stream().findFirst().get();
             detail.attachFileLocation(result.getStoredFileName());
         }
         //TODO :: MOVIE FILE
 
         return mapper.map(detail, ContentsDetailDto.class);
-        }).collect(Collectors.toList());
     }
 
     public Boolean removeContentInfo(Long contentsNo) {

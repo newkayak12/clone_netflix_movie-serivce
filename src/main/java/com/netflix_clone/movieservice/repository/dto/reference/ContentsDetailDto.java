@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(value = {"contentsInfo"})
 public class ContentsDetailDto implements Serializable {
     private Long detailNo;
     private Integer season;

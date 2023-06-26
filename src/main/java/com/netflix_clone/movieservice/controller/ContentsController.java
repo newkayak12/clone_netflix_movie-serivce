@@ -4,6 +4,7 @@ import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsDetailDto;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
+import com.netflix_clone.movieservice.repository.dto.request.DetailRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
@@ -25,7 +26,7 @@ public class ContentsController {
         return ResponseEntity.ok(service.saveContentInfo(request));
     }
     @PostMapping(value = "/save/detail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<List<ContentsDetailDto>> saveContentDetail(@ModelAttribute List<SaveDetailRequest> request){
+    public ResponseEntity<ContentsDetailDto> saveContentDetail(@ModelAttribute SaveDetailRequest request){
         return ResponseEntity.ok(service.saveContentDetail(request));
     }
     @DeleteMapping(value = "/info/{contentsNo:[\\d]+}")

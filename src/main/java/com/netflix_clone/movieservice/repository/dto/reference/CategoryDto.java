@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
