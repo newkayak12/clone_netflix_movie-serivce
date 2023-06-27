@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.netflix_clone.movieservice.component.enums.ContentType;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
@@ -37,6 +38,13 @@ public class ContentsInfoDto implements Serializable {
 
     @Transient
     private List<FileDto> images;
+
+
+    public void preventInfiniteRecursive() {
+        this.contentPeople.forEach( v -> {
+            v.setContentsInfo(null);
+        });
+    }
 
 
     @QueryProjection

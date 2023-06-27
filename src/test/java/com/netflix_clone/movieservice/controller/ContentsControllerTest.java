@@ -9,10 +9,7 @@ import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.util.AbstractControllerTest;
 import com.netflix_clone.movieservice.util.TestUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.newkayak.FileUpload.FileResult;
@@ -67,8 +64,8 @@ class ContentsControllerTest extends AbstractControllerTest {
 
             request.setCategory(categoryDto);
             request.setPeopleNo(Arrays.asList(2059L));
-            request.setTitle("[제로초] 인간 JS 되기");
-            request.setDescription("JS 에 대해서 알아보는 시간");
+            request.setTitle("[제로초] WebGame으로 배우는 React");
+            request.setDescription("React 기초 다지기");
             request.setReleaseDate(LocalDateTime.now().plusMonths(2L));
             request.setContentType(ContentType.TV);
             request.setServiceDueDate(LocalDateTime.now().plusYears(99L));
@@ -92,75 +89,141 @@ class ContentsControllerTest extends AbstractControllerTest {
                 .file(rawFile)
                 .param("category.categoryNo", "101")
                 .param("peopleNo", "2059")
-                .param("title","[제로초] 인간 JS 되기")
-                .param("description","JS 에 대해서 알아보는 시간")
+                .param("title","[제로초] WebGame으로 배우는 React")
+                .param("description","React 기초 다지기")
                 .param("releaseDate", release)
                 .param("contentType", ContentType.TV.name())
                 .param("serviceDueDate", due)
             ).andExpect(status().isOk());
         }
-    }
-
-    @ParameterizedTest
-    @DisplayName(value = "detail 저장")
-    @ValueSource(ints = {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16})
-    void saveContentDetail(int value) throws Exception {
-        mockMvc.perform(
-            this.generateRequest(value)
-        )
-        .andExpect(status().isOk());
-
-    }
-
-    MockHttpServletRequestBuilder generateRequest(int value){
-        try {
-            MockMultipartFile image = TestUtil.getMockMultiPartFile("/Users/sanghyeonkim/Downloads/R1280x0.png", "image", "rawFile");
-            MockMultipartFile movie = TestUtil.getMockMultiPartFile(
-                    String.format("/Users/sanghyeonkim/Downloads/port/netflixClone/source/zerocho_js/%s.mp4", (value < 10 ? "0" + (value) : value)),
-                    "video",
-                    "rawMovieFile"
-            );
-            MockMultipartHttpServletRequestBuilder builder = multipart(String.format("%s/save/detail", prefix));
-            builder
-                    .file(image)
-                    .file(movie)
-                    .param("season", "1")
-                    .param("episode", value + "")
-                    .param("subTitle", String.format("[ %s 강 ]", (value < 10 ? "0" + (value) : value)))
-                    //                .param(String.format("duration", )
-                    .param("contentsNo", "2");
-            builder.contentType(MediaType.MULTIPART_FORM_DATA);
-
-
-            return builder;
-        } catch (Exception e){
+        /**
+         * ISSUE ::
+         * test를 gradle 환경에서 실행하면 timeout
+         * Intellij로 실행하면 정삭 작동
+         *
+         */
+        @ParameterizedTest
+        @DisplayName(value = "detail 저장")
+        @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12})
+        void saveContentDetail(int number) throws Exception {
+            mockMvc.perform(
+                            this.generateRequest(number)
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.subTitle").value(String.format("[ %s 강 ]", (number < 10 ? "0" + (number) : number))));
 
         }
 
-        return null;
+        MockHttpServletRequestBuilder generateRequest(int value){
+            try {
+                MockMultipartFile image = TestUtil.getMockMultiPartFile("/Users/sanghyeonkim/Downloads/R1280x0.png", "image", "rawFile");
+                MockMultipartFile movie = TestUtil.getMockMultiPartFile(
+                        String.format("/Users/sanghyeonkim/Downloads/port/netflixClone/source/zerocho_react/%s.mp4", (value < 10 ? "0" + (value) : value)),
+                        "video",
+                        "rawMovieFile"
+                );
+                MockMultipartHttpServletRequestBuilder builder = multipart(String.format("%s/save/detail", prefix));
+                builder
+                        .file(image)
+                        .file(movie)
+                        .param("season", "1")
+                        .param("episode", value + "")
+                        .param("subTitle", String.format("[ %s 강 ]", (value < 10 ? "0" + (value) : value)))
+                        //                .param(String.format("duration", )
+                        .param("contentsNo", "3");
+                builder.contentType(MediaType.MULTIPART_FORM_DATA);
+
+
+                return builder;
+            } catch (Exception e){
+
+            }
+
+            return null;
+        }
     }
 
-    @Test
-    void removeContentInfo() {
+
+    @Nested
+    @DisplayName(value = "컨텐츠 삭제")
+    class RemoveContent{
+        @Test
+        @DisplayName(value = "컨텐츠 삭제")
+        void removeContentInfo() {
+        }
+
+        @Test
+        @DisplayName(value = "컨텐츠 상세 삭제")
+        void removeDetail() {
+        }
     }
 
-    @Test
-    void removeDetail() {
+
+    @Nested
+    @DisplayName(value = "컨텐츠 불러오기")
+    class FetchContents {
+        @ParameterizedTest
+        @DisplayName(value = "컨텐츠 리스트_카테고리")
+        @ValueSource(ints = 101)
+        void contents_category(int categoryNo) throws Exception {
+            mockMvc.perform(
+                    get(String.format("%s/", prefix))
+                            .param("limit","10")
+                            .param("page", "1")
+                            .param("categoryNo", categoryNo+"")
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content.size()").value(2));
+
+        }
+
+        @ParameterizedTest
+        @DisplayName(value = "컨텐츠 리스트_컨텐츠 타입")
+        @ValueSource(strings = "TV")
+        void contents_contentType(String contentType) throws Exception {
+            mockMvc.perform(
+                    get(String.format("%s/", prefix))
+                            .param("limit","10")
+                            .param("page", "1")
+                            .param("contentType", contentType)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content.size()").value(2));
+        }
+
+        @ParameterizedTest
+        @DisplayName(value = "컨텐츠 리스트_제목")
+        @ValueSource(strings = "react")
+        void contents_title(String searchText) throws Exception {
+            mockMvc.perform(
+                    get(String.format("%s/", prefix))
+                            .param("limit","10")
+                            .param("page", "1")
+                            .param("searchText",searchText)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content.size()").value(1));
+        }
+
+        @ParameterizedTest
+        @DisplayName(value = "컨텐츠 단일")
+        @ValueSource(ints = 3)
+        void content(int contentsNo) throws Exception {
+            mockMvc.perform(
+                get(String.format("%s/%d", prefix, contentsNo))
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.contentsNo").value(3))
+            .andExpect(jsonPath("$.title").value("[제로초] WebGame으로 배우는 React"))
+            .andExpect(jsonPath("$.description").value("React 기초 다지기"))
+            .andExpect(jsonPath("$.details").isNotEmpty());
+        }
+
     }
 
-    @Test
-    void contents() {
-    }
 
     @Test
-    void content() {
-    }
-
-    @Test
-    void stream() {
-    }
-
-    @Test
+    @DisplayName(value = "파일 저장 테스트")
     void mediaFile() {
         MockMultipartFile file = TestUtil.getMockMultiPartFile("/Users/sanghyeonkim/Downloads/port/netflixClone/source/zerocho_js/02.mp4", "video", "01");
 

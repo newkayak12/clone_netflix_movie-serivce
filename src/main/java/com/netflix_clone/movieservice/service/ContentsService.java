@@ -53,7 +53,7 @@ public class ContentsService {
 
     @Transactional(readOnly = true)
     public PageImpl<ContentsInfoDto> contents(ContentRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getLimit());
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<ContentsInfoDto>) repository.contents(request, pageable)
                 .map(contentsInfoDto -> {
                     contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
@@ -85,6 +85,8 @@ public class ContentsService {
                         return contentPersonDto;
                     }).collect(Collectors.toList());
                     contentsInfoDto.setContentPeople(contentPerson);
+
+                    contentsInfoDto.preventInfiniteRecursive(); //TODO :: 순환 참조 방지 -> 더 좋은 방법이 있지 않을까?
 
                     return contentsInfoDto;
                 })
@@ -179,7 +181,6 @@ public class ContentsService {
 
 
         if(Objects.nonNull(request.getRawMovieFile())){
-            log.warn("PATH {}", Constants.MOVIE_PATH);
             FileResult result = upload.upload(false, request.getRawMovieFile()).stream().findFirst().get();
             detail.attachFileLocation(result.getStoredFileName());
         }

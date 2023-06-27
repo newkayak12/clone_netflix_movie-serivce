@@ -12,7 +12,9 @@ import java.time.LocalTime;
 import java.util.List;
 
 
-@Table(name = "contentsInfo")
+@Table(name = "contentsInfo", indexes = {
+        @Index(columnList = "title", name = "title_idx"),
+})
 @Entity
 @Getter
 @DynamicInsert

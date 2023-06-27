@@ -76,9 +76,9 @@ public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements
                             .leftJoin(contentsInfo.details, contentsDetail)
                             .fetchJoin()
                             .leftJoin(contentsInfo.contentPeople, contentPerson)
-                            .fetchJoin()
                             .leftJoin(contentPerson.person, person)
-                            .fetchJoin()
+//                            .fetchJoin()
+                            .where(contentsInfo.contentsNo.eq(contentNo))
                             .fetchOne();
     }
 

@@ -90,7 +90,7 @@ dependencyManagement {
 }
 
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
     outputs.dir snippetsDir // (6)
 }

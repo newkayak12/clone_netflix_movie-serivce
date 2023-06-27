@@ -26,7 +26,7 @@ public class WatchedService {
     private final ModelMapper mapper;
 
     public PageImpl<WatchedDto> watchedContents(PageableRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getLimit());
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<WatchedDto>) repository.watchedContents(request, pageable)
                 .map( result -> {
                     ContentsInfoDto contentsInfoDto = result.getContentsInfo();

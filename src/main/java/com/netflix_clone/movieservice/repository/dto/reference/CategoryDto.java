@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@JsonIgnoreProperties(value = {"parentCategory"})
 public class CategoryDto implements Serializable {
     private Long categoryNo;
     private CategoryDto parentCategory;

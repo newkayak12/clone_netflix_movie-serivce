@@ -33,7 +33,7 @@ public class FavoriteService {
     private final ModelMapper mapper;
 
     public PageImpl<FavoriteWatchedDto> favorites(PageableRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getLimit());
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<FavoriteWatchedDto>) repository.favorites(request, pageable).map( result -> {
             ContentsInfoDto contentsInfoDto = result.getContentsInfo();
             contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());

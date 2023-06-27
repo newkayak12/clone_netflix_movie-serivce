@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+
 public class ContentPersonDto implements Serializable {
     private Long contentPersonNo;
     private ContentsInfoDto contentsInfo;
