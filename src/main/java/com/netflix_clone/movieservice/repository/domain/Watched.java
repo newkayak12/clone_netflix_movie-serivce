@@ -23,8 +23,8 @@ public class Watched {
     @JoinColumn(name = "profileNo")
     private MovieProfile profile;
     @ManyToOne
-    @JoinColumn(name = "contentsNo")
-    private ContentsInfo contentsInfo;
+    @JoinColumn(name = "detailNo")
+    private ContentsDetail contentsDetail;
 
     @Column(name = "lastWatchedDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP()",
             insertable = false, updatable = true)

@@ -2,7 +2,6 @@ package com.netflix_clone.movieservice.service;
 
 import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
 import com.netflix_clone.movieservice.component.constant.Constants;
-import com.netflix_clone.movieservice.component.enums.ContentType;
 import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
@@ -27,9 +26,9 @@ import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -62,32 +60,30 @@ public class ContentsService {
     }
 
     @Transactional(readOnly = true)
-    public ContentsInfoDto content(Long contentsNo) throws CommonException {
-        return Optional.ofNullable(repository.content(contentsNo))
-                .map(contentsInfo -> {
-                    ContentsInfoDto contentsInfoDto = mapper.map(contentsInfo, ContentsInfoDto.class);
+    public ContentsInfoDto content(Long contentsNo, MovieProfileDto profileDto) throws CommonException {
+        return  repository.content(contentsNo, profileDto)
+                .map(contentsInfoDto -> {
                     contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
 
-                    List<ContentsDetailDto> details = contentsInfo.getDetails().parallelStream().map(detailInfo -> {
-                        ContentsDetailDto detail = mapper.map(detailInfo, ContentsDetailDto.class);
+                    contentsInfoDto.setPeople(contentsInfoDto.getPeople().stream().distinct().collect(Collectors.toList()));
+                    contentsInfoDto.setDetails(contentsInfoDto.getDetails().stream().distinct().collect(Collectors.toList()));
+
+
+
+                    contentsInfoDto.getDetails().parallelStream()
+                    .forEach(detail -> {
                         detail.setThumbnail(imageFeign.file(detail.getDetailNo(), FileType.THUMBNAIL).getBody());
-                        return detail;
-                    }).collect(Collectors.toList());
-                    contentsInfoDto.setDetails(details);
+                    });
+                    contentsInfoDto.getPeople().stream().parallel().forEach(person -> {
+                        person.setFile(
+                                Optional.ofNullable(imageFeign.file(
+                                        person.getPersonNo(),
+                                        person.getRole().equals(Role.DIRECTOR) ? FileType.DIRECTOR : FileType.ACTOR
+                                )).map(HttpEntity::getBody).orElseGet(() -> null)
+                        );
+                    });
 
-                    List<ContentPersonDto> contentPerson = contentsInfo.getContentPeople().parallelStream().map(conPer -> {
-                        ContentPersonDto contentPersonDto = mapper.map(conPer, ContentPersonDto.class);
-                        PersonDto personDto = contentPersonDto.getPerson();
-                        personDto.setFile(imageFeign.file(personDto.getPersonNo(),
-                                         personDto.getRole().equals(Role.DIRECTOR) ? FileType.DIRECTOR : FileType.ACTOR).getBody());
-
-                        contentPersonDto.setPerson(personDto);
-                        return contentPersonDto;
-                    }).collect(Collectors.toList());
-                    contentsInfoDto.setContentPeople(contentPerson);
-
-                    contentsInfoDto.preventInfiniteRecursive(); //TODO :: 순환 참조 방지 -> 더 좋은 방법이 있지 않을까?
-
+//                    contentsInfoDto.preventInfiniteRecursive(); //TODO :: 순환 참조 방지 -> 더 좋은 방법이 있지 않을까?
                     return contentsInfoDto;
                 })
                 .orElseThrow(() -> new CommonException(BecauseOf.NO_DATA));

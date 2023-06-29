@@ -3,6 +3,7 @@ package com.netflix_clone.movieservice.controller;
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsDetailDto;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
+import com.netflix_clone.movieservice.repository.dto.reference.MovieProfileDto;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
 import com.netflix_clone.movieservice.repository.dto.request.DetailRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
@@ -45,8 +46,9 @@ public class ContentsController {
         return new ResponseEntity(service.contents(request), HttpStatus.OK);
     }
     @GetMapping(value = "/{contentsNo:[\\d]+}")
-    public ResponseEntity content(@PathVariable Long contentsNo) throws CommonException {
-        return new ResponseEntity(service.content(contentsNo), HttpStatus.OK);
+    public ResponseEntity content(@PathVariable Long contentsNo,
+                                  @ModelAttribute MovieProfileDto profileDto) throws CommonException {
+        return new ResponseEntity(service.content(contentsNo, profileDto), HttpStatus.OK);
     }
 
     //TODO : 영상 스트리밍 공부하기

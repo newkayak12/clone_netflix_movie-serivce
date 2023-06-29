@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
+import com.netflix_clone.movieservice.repository.domain.ContentsDetail;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.time.LocalTime;
 public class WatchedDto implements Serializable {
     private Long watchedNo;
     private MovieProfileDto profile;
-    private ContentsInfoDto contentsInfo;
+    private ContentsDetailDto contentsDetail;
     private LocalDateTime lastWatchedDate;
     private LocalTime watchedAt;
 
@@ -31,9 +32,9 @@ public class WatchedDto implements Serializable {
     }
 
     @QueryProjection
-    public WatchedDto(Long watchedNo, ContentsInfoDto contentsInfo, LocalDateTime lastWatchedDate, LocalTime watchedAt) {
+    public WatchedDto(Long watchedNo, ContentsDetailDto contentsDetail, LocalDateTime lastWatchedDate, LocalTime watchedAt) {
         this.watchedNo = watchedNo;
-        this.contentsInfo = contentsInfo;
+        this.contentsDetail = contentsDetail;
         this.lastWatchedDate = lastWatchedDate;
         this.watchedAt = watchedAt;
     }

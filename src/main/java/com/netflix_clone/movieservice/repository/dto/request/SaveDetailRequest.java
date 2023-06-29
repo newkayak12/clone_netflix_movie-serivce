@@ -20,7 +20,9 @@ public class SaveDetailRequest extends ContentsDetailDto {
     private MultipartFile rawFile;
     private MultipartFile rawMovieFile;
 
-    public SaveDetailRequest(Long detailNo, Integer season, Integer episode, String subTitle, LocalTime duration, String storedLocation, ContentsInfoDto contentsInfo, FileDto thumbnail, MultipartFile rawFile, MultipartFile rawMovieFile) {
+    public SaveDetailRequest(Long detailNo, Integer season, Integer episode, String subTitle,
+                             LocalTime duration, String storedLocation, ContentsInfoDto contentsInfo,
+                             FileDto thumbnail, MultipartFile rawFile, MultipartFile rawMovieFile) {
         super(detailNo, season, episode, subTitle, duration, storedLocation, contentsInfo, thumbnail, rawFile);
         this.rawFile = rawFile;
         this.rawMovieFile = rawMovieFile;

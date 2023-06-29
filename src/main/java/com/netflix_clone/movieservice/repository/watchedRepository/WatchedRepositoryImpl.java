@@ -29,34 +29,34 @@ public class WatchedRepositoryImpl extends QuerydslRepositorySupport implements 
 
     @Override
     public PageImpl<WatchedDto> watchedContents(PageableRequest request, Pageable pageable) {
-        List<WatchedDto> list =  query.select(
-                new QWatchedDto(
-                        watched.watchedNo,
-                        new QContentsInfoDto(
-                                contentsInfo.contentsNo,
-                                contentsInfo.title,
-                                contentsInfo.description,
-                                contentsInfo.releaseDate,
-                                contentsInfo.contentType,
-                                contentsInfo.duration,
-                                contentsInfo.regDate,
-                                contentsInfo.serviceDueDate,
-                                contentsInfo.storedLocation,
-                                contentsInfo.watchCount
-                        ),
-                        watched.lastWatchedDate,
-                        watched.watchedAt
-                )
-        )
-        .from(watched)
-        .join(watched.contentsInfo, contentsInfo)
-        .where(watched.profile.profileNo.eq(request.getTableNo()))
-        .limit(pageable.getPageSize()).offset(pageable.getOffset())
-        .orderBy(watched.lastWatchedDate.desc())
-        .fetch();
+//        List<WatchedDto> list =  query.select(
+//                new QWatchedDto(
+//                        watched.watchedNo,
+//                        new QContentsInfoDto(
+//                                contentsInfo.contentsNo,
+//                                contentsInfo.title,
+//                                contentsInfo.description,
+//                                contentsInfo.releaseDate,
+//                                contentsInfo.contentType,
+//                                contentsInfo.duration,
+//                                contentsInfo.regDate,
+//                                contentsInfo.serviceDueDate,
+//                                contentsInfo.storedLocation,
+//                                contentsInfo.watchCount
+//                        ),
+//                        watched.lastWatchedDate,
+//                        watched.watchedAt
+//                )
+//        )
+//        .from(watched)
+//        .join(watched.contentsInfo, contentsInfo)
+//        .where(watched.profile.profileNo.eq(request.getTableNo()))
+//        .limit(pageable.getPageSize()).offset(pageable.getOffset())
+//        .orderBy(watched.lastWatchedDate.desc())
+//        .fetch();
+//
+//        Long count = from(watched).where(watched.profile.profileNo.eq(request.getTableNo())).fetchCount();
 
-        Long count = from(watched).where(watched.profile.profileNo.eq(request.getTableNo())).fetchCount();
-
-        return new PageImpl<WatchedDto>(list, pageable, count);
+        return null;
     }
 }

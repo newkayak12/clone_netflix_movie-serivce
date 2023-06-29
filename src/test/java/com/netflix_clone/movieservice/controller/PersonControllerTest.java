@@ -117,11 +117,11 @@ class PersonControllerTest extends AbstractControllerTest {
         @DisplayName(value = "단일")
         void person() throws Exception {
             mockMvc.perform(
-                get(String.format("%s/%d", prefix, 2060))
+                get(String.format("%s/%d", prefix, 2059))
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.personNo").value(2060))
-            .andExpect(jsonPath("$.name").value("베네딕트 컴버배치"))
+            .andExpect(jsonPath("$.personNo").value(2059))
+            .andExpect(jsonPath("$.name").value("ZEROCHO"))
             .andExpect(jsonPath("$.role").value("ACTOR"));
         }
     }

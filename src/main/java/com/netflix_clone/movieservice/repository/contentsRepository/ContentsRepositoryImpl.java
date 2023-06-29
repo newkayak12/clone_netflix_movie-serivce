@@ -15,15 +15,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.netflix_clone.movieservice.repository.domain.QMovieProfile.movieProfile;
 import static com.netflix_clone.movieservice.repository.domain.QContentsInfo.contentsInfo;
 import static com.netflix_clone.movieservice.repository.domain.QCategory.category;
 import static com.netflix_clone.movieservice.repository.domain.QContentsDetail.contentsDetail;
 import static com.netflix_clone.movieservice.repository.domain.QPerson.person;
 import static com.netflix_clone.movieservice.repository.domain.QContentPerson.contentPerson;
+import static com.netflix_clone.movieservice.repository.domain.QWatched.watched;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
+
 public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements ContentsRepositoryCustom{
     private JPQLQueryFactory query;
 
@@ -71,15 +80,56 @@ public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements
     }
 
     @Override
-    public ContentsInfo content(Long contentNo) {
-        return  from(contentsInfo)
-                            .leftJoin(contentsInfo.details, contentsDetail)
-                            .fetchJoin()
-                            .leftJoin(contentsInfo.contentPeople, contentPerson)
-                            .leftJoin(contentPerson.person, person)
-//                            .fetchJoin()
-                            .where(contentsInfo.contentsNo.eq(contentNo))
-                            .fetchOne();
+    public Optional<ContentsInfoDto> content(Long contentNo, MovieProfileDto profileDto) {
+      return    from(contentsInfo)
+                .leftJoin(contentsInfo.category, category)
+                .leftJoin(contentsInfo.contentPeople, contentPerson)
+                .leftJoin(contentPerson.person, person)
+                .leftJoin(contentsInfo.details, contentsDetail)
+                .leftJoin(watched)
+                .on(contentsDetail.detailNo.eq(watched.contentsDetail.detailNo))
+                .leftJoin(movieProfile)
+                .on(
+                    watched.profile.profileNo.eq(movieProfile.profileNo)
+                .and(movieProfile.profileNo.eq(profileDto.getProfileNo()))
+                )
+                .where(contentsInfo.contentsNo.eq(contentNo))
+                .transform(
+                        groupBy(contentsInfo.contentsNo)
+                        .as(
+                                new QContentsInfoDto(
+                                        contentsInfo.contentsNo,
+                                        new QCategoryDto(
+                                                category.categoryNo,
+                                                category.name
+                                        ),
+                                        contentsInfo.title,
+                                        contentsInfo.description,
+                                        contentsInfo.releaseDate,
+                                        contentsInfo.contentType,
+                                        contentsInfo.duration,
+                                        contentsInfo.regDate,
+                                        contentsInfo.serviceDueDate,
+                                        contentsInfo.storedLocation,
+                                        contentsInfo.watchCount,
+                                        list(new QPersonDto(
+                                                person.personNo,
+                                                person.name,
+                                                person.role
+                                        )),
+                                        list(
+                                                new QContentsDetailDto(
+                                                        contentsDetail.detailNo,
+                                                        contentsDetail.season,
+                                                        contentsDetail.episode,
+                                                        contentsDetail.subTitle,
+                                                        contentsDetail.duration,
+                                                        contentsDetail.storedLocation
+                                                )
+                                        )
+                                )
+                        )
+                ).values().stream().findAny();
     }
 
 }

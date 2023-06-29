@@ -57,7 +57,7 @@ public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements
         )
         .from(favorite)
         .join(favorite.contentsInfo, contentsInfo)
-        .leftJoin(watched).on(contentsInfo.contentsNo.eq(watched.contentsInfo.contentsNo))
+//        .leftJoin(watched).on(contentsInfo.contentsNo.eq(watched.contentsInfo.contentsNo))
         .where(builder)
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset()).fetch();

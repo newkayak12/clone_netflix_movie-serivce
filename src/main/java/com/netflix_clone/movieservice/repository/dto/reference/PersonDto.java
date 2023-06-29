@@ -18,6 +18,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@EqualsAndHashCode(of = "personNo")
 public class PersonDto implements Serializable {
     private Long personNo;
     private String name;

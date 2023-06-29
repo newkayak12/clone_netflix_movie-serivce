@@ -2,6 +2,7 @@ package com.netflix_clone.movieservice.repository.dto.reference;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.netflix_clone.movieservice.component.enums.ContentType;
+import com.netflix_clone.movieservice.repository.domain.Person;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class ContentsInfoDto implements Serializable {
     private String storedLocation;
     private Long watchCount;
     private List<ContentPersonDto> contentPeople;
+
+    private List<PersonDto> people;
+
     private List<ContentsDetailDto> details;
 
     @Transient
@@ -51,7 +55,7 @@ public class ContentsInfoDto implements Serializable {
     public ContentsInfoDto(Long contentsNo, CategoryDto category, String title, String description,
                            LocalDateTime releaseDate, ContentType contentType, LocalTime duration,
                            LocalDateTime regDate, LocalDateTime serviceDueDate, String storedLocation,
-                           Long watchCount, List<ContentPersonDto> contentPeople, List<ContentsDetailDto> details) {
+                           Long watchCount, List<PersonDto> people, List<ContentsDetailDto> details) {
         this.contentsNo = contentsNo;
         this.category = category;
         this.title = title;
@@ -63,7 +67,7 @@ public class ContentsInfoDto implements Serializable {
         this.serviceDueDate = serviceDueDate;
         this.storedLocation = storedLocation;
         this.watchCount = watchCount;
-        this.contentPeople = contentPeople;
+        this.people = people;
         this.details = details;
     }
 

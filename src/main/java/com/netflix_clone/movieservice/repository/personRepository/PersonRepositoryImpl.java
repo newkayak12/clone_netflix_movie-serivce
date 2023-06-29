@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -57,33 +58,34 @@ public class PersonRepositoryImpl extends QuerydslRepositorySupport implements P
 
     @Override
     public Optional<PersonDto> person(Long personNo) {
-        return Optional.ofNullable(
-                query.select(
-                                new QPersonDto(
-                                        person.personNo,
-                                        person.name,
-                                        person.role,
-                                        list(
-                                                new QContentsInfoDto(
-                                                        contentsInfo.contentsNo,
-                                                        contentsInfo.title,
-                                                        contentsInfo.description,
-                                                        contentsInfo.releaseDate,
-                                                        contentsInfo.contentType,
-                                                        contentsInfo.duration,
-                                                        contentsInfo.regDate,
-                                                        contentsInfo.serviceDueDate,
-                                                        contentsInfo.storedLocation,
-                                                        contentsInfo.watchCount
-                                                )
-                                        )
-                                )
-                        )
-                        .from(person)
+        return
+                from(person)
                         .leftJoin(person.contentPeople, contentPerson)
                         .leftJoin(contentPerson.contentsInfo, contentsInfo)
                         .where(person.personNo.eq(personNo))
-                        .fetchOne()
-        );
+                        .transform(
+                                groupBy(person.personNo)
+                                .as(
+                                        new QPersonDto(
+                                                person.personNo,
+                                                person.name,
+                                                person.role,
+                                                list(
+                                                        new QContentsInfoDto(
+                                                                contentsInfo.contentsNo,
+                                                                contentsInfo.title,
+                                                                contentsInfo.description,
+                                                                contentsInfo.releaseDate,
+                                                                contentsInfo.contentType,
+                                                                contentsInfo.duration,
+                                                                contentsInfo.regDate,
+                                                                contentsInfo.serviceDueDate,
+                                                                contentsInfo.storedLocation,
+                                                                contentsInfo.watchCount
+                                                        )
+                                                )
+                                        )
+                                )
+                        ).values().stream().findFirst();
     }
 }

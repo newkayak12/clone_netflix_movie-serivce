@@ -29,9 +29,9 @@ public class WatchedService {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<WatchedDto>) repository.watchedContents(request, pageable)
                 .map( result -> {
-                    ContentsInfoDto contentsInfoDto = result.getContentsInfo();
-                    contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
-                    result.setContentsInfo(contentsInfoDto);
+//                    ContentsInfoDto contentsInfoDto = result.getContentsInfo();
+//                    contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
+//                    result.setContentsInfo(contentsInfoDto);
                     return result;
                 });
 

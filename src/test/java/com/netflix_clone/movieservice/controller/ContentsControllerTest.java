@@ -211,6 +211,7 @@ class ContentsControllerTest extends AbstractControllerTest {
         void content(int contentsNo) throws Exception {
             mockMvc.perform(
                 get(String.format("%s/%d", prefix, contentsNo))
+                .param("profileNo", "18")
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.contentsNo").value(3))
