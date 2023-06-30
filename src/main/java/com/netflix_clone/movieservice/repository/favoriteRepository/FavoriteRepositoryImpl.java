@@ -13,6 +13,7 @@ import java.util.List;
 import static com.netflix_clone.movieservice.repository.domain.QWatched.watched;
 import static com.netflix_clone.movieservice.repository.domain.QContentsInfo.contentsInfo;
 import static com.netflix_clone.movieservice.repository.domain.QFavorite.favorite;
+import static com.netflix_clone.movieservice.repository.domain.QContentsDetail.contentsDetail;
 import static com.netflix_clone.movieservice.repository.domain.QCategory.category;
 public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements FavoriteRepositoryCustom {
     private JPQLQueryFactory query;
@@ -43,26 +44,35 @@ public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements
                                 contentsInfo.storedLocation,
                                 contentsInfo.watchCount
                         ),
-                        new QWatchedDto(
-                                watched.watchedNo,
-                                watched.lastWatchedDate,
-                                watched.watchedAt
-                        ),
                         new QFavoriteDto(
                                 favorite.favoriteNo,
                                 favorite.favoriteDate,
                                 favorite.isFavorite
-                        )
+                        ),
+                        watched.lastWatchedDate.max()
                 )
         )
-        .from(favorite)
-        .join(favorite.contentsInfo, contentsInfo)
-//        .leftJoin(watched).on(contentsInfo.contentsNo.eq(watched.contentsInfo.contentsNo))
+        .from(contentsInfo)
+        .innerJoin(favorite)
+        .on(favorite.contentsInfo.contentsNo.eq(contentsInfo.contentsNo))
+        .leftJoin(contentsDetail)
+        .on(contentsDetail.contentsInfo.contentsNo.eq(contentsInfo.contentsNo))
+        .leftJoin(watched)
+        .on(watched.contentsDetail.detailNo.eq(contentsDetail.detailNo))
         .where(builder)
+        .groupBy(contentsInfo.contentsNo)
         .limit(pageable.getPageSize())
         .offset(pageable.getOffset()).fetch();
 
-        Long count = from(favorite).join(favorite.contentsInfo, contentsInfo).where(builder).fetchCount();
+        Long count = from(contentsInfo)
+                .innerJoin(favorite)
+                .on(favorite.contentsInfo.contentsNo.eq(contentsInfo.contentsNo))
+                .leftJoin(contentsDetail)
+                .on(contentsDetail.contentsInfo.contentsNo.eq(contentsInfo.contentsNo))
+                .leftJoin(watched)
+                .on(watched.contentsDetail.detailNo.eq(contentsDetail.detailNo))
+                .where(builder)
+                .groupBy(contentsInfo.contentsNo).fetchCount();
         return new PageImpl<>(list, pageable, count);
     }
 }

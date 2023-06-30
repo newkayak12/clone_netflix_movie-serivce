@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,23 +37,20 @@ public class FavoriteService {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<FavoriteWatchedDto>) repository.favorites(request, pageable).map( result -> {
             ContentsInfoDto contentsInfoDto = result.getContentsInfo();
-            contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
-
-            if(Objects.isNull(result.getFavorite())) {
-                FavoriteDto favoriteDto = new FavoriteDto();
-                favoriteDto.emptyFavorite(contentsInfoDto.getContentsNo(), request.getTableNo());
-                result.setFavorite(favoriteDto);
-            }
-
+            contentsInfoDto.setImages(
+                    Optional.ofNullable(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS))
+                            .map(ResponseEntity::getBody)
+                            .orElseGet(() -> null)
+            );
             result.setContentsInfo(contentsInfoDto);
             return result;
         });
     }
 
-    public FavoriteDto setFavoriteStatus(SetFavoriteStatusRequest request) throws CommonException {
+    public Boolean setFavoriteStatus(SetFavoriteStatusRequest request) throws CommonException {
         Favorite favorite = mapper.map(request, Favorite.class);
         return Optional.ofNullable(repository.save(favorite))
-                       .map(result -> mapper.map(result, FavoriteDto.class))
+                       .map(Objects::nonNull)
                        .orElseThrow(() -> new CommonException(BecauseOf.SAVE_FAILURE));
     }
 }

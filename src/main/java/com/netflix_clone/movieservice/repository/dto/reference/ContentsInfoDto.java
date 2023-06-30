@@ -24,17 +24,16 @@ public class ContentsInfoDto implements Serializable {
     private String title;
     private String description;
     private LocalDateTime releaseDate;
-
     private ContentType contentType;
     private LocalTime duration;
     private LocalDateTime regDate;
     private LocalDateTime serviceDueDate;
     private String storedLocation;
     private Long watchCount;
+
+
     private List<ContentPersonDto> contentPeople;
-
     private List<PersonDto> people;
-
     private List<ContentsDetailDto> details;
 
     @Transient
@@ -42,6 +41,9 @@ public class ContentsInfoDto implements Serializable {
 
     @Transient
     private List<FileDto> images;
+
+    @Transient
+    private LocalDateTime lastWatchedDate;
 
 
     public void preventInfiniteRecursive() {
@@ -121,6 +123,26 @@ public class ContentsInfoDto implements Serializable {
         this.serviceDueDate = serviceDueDate;
         this.storedLocation = storedLocation;
         this.watchCount = watchCount;
+    }
+
+    @QueryProjection
+    public ContentsInfoDto(Long contentsNo, String title, String description, LocalDateTime releaseDate,
+                           ContentType contentType, LocalTime duration, LocalDateTime regDate,
+                           LocalDateTime serviceDueDate, String storedLocation, Long watchCount,
+                           LocalDateTime lastWatchedDate) {
+       this(
+           contentsNo,
+           title,
+           description,
+           releaseDate,
+           contentType,
+           duration,
+           regDate,
+           serviceDueDate,
+           storedLocation,
+           watchCount
+       );
+       this.lastWatchedDate = lastWatchedDate;
     }
 
     @QueryProjection

@@ -3,6 +3,7 @@ package com.netflix_clone.movieservice.service;
 
 import com.netflix_clone.movieservice.component.configure.feign.ImageFeign;
 import com.netflix_clone.movieservice.component.enums.FileType;
+import com.netflix_clone.movieservice.repository.domain.Watched;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.reference.PageableRequest;
 import com.netflix_clone.movieservice.repository.dto.reference.WatchedDto;
@@ -25,15 +26,19 @@ public class WatchedService {
     private final ImageFeign imageFeign;
     private final ModelMapper mapper;
 
-    public PageImpl<WatchedDto> watchedContents(PageableRequest request) {
+    public Boolean makeWatched(WatchedDto watchedDto) {
+        return repository.save(mapper.map(watchedDto, Watched.class)).isPresent();
+    }
+
+    public PageImpl<ContentsInfoDto> watchedContents(PageableRequest request) {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
-        return (PageImpl<WatchedDto>) repository.watchedContents(request, pageable)
+        return (PageImpl<ContentsInfoDto>) repository.watchedContents(request, pageable)
                 .map( result -> {
-//                    ContentsInfoDto contentsInfoDto = result.getContentsInfo();
-//                    contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
-//                    result.setContentsInfo(contentsInfoDto);
+                    result.setImages(imageFeign.files(result.getContentsNo(), FileType.CONTENTS).getBody());
                     return result;
                 });
 
     }
+
+
 }

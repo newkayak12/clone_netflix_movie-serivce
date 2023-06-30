@@ -24,7 +24,12 @@ public class FavoriteController {
     }
 
     @PostMapping(value = "/")
-    public ResponseEntity<FavoriteDto> setFavoriteStatus(@RequestBody SetFavoriteStatusRequest request) throws CommonException {
-        return new ResponseEntity<FavoriteDto>(service.setFavoriteStatus(request), HttpStatus.OK);
+    public ResponseEntity<Boolean> setFavoriteStatus(@RequestBody SetFavoriteStatusRequest request) throws CommonException {
+        return new ResponseEntity(service.setFavoriteStatus(request), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{favoriteNo:[\\d]+}")
+    public ResponseEntity<Boolean> removeFavoriteStatus(@PathVariable Long favoriteNo){
+        return ResponseEntity.ok()
     }
 }
