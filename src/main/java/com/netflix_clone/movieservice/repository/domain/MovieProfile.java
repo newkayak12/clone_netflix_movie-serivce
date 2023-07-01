@@ -3,6 +3,7 @@ package com.netflix_clone.movieservice.repository.domain;
 
 
 import com.netflix_clone.movieservice.repository.dto.reference.FileDto;
+import lombok.ToString;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "movie_profile")
+@ToString
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class MovieProfile {
     @Id

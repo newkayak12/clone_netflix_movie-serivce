@@ -30,6 +30,6 @@ public class FavoriteController {
 
     @DeleteMapping(value = "/{favoriteNo:[\\d]+}")
     public ResponseEntity<Boolean> removeFavoriteStatus(@PathVariable Long favoriteNo){
-        return ResponseEntity.ok()
+        return ResponseEntity.ok(service.removeFavoriteStatus(favoriteNo));
     }
 }

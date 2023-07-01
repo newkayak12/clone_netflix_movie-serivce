@@ -28,7 +28,6 @@ public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements
     public PageImpl<FavoriteWatchedDto> favorites(PageableRequest request, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(favorite.profile.profileNo.eq(request.getTableNo()));
-        builder.and(favorite.isFavorite.isTrue());
 
         List<FavoriteWatchedDto> list = query.select(
                 new QFavoriteWatchedDto (
@@ -46,8 +45,7 @@ public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements
                         ),
                         new QFavoriteDto(
                                 favorite.favoriteNo,
-                                favorite.favoriteDate,
-                                favorite.isFavorite
+                                favorite.favoriteDate
                         ),
                         watched.lastWatchedDate.max()
                 )
@@ -74,5 +72,10 @@ public class FavoriteRepositoryImpl extends QuerydslRepositorySupport implements
                 .where(builder)
                 .groupBy(contentsInfo.contentsNo).fetchCount();
         return new PageImpl<>(list, pageable, count);
+    }
+
+    @Override
+    public Boolean removeFavoriteStatus(Long favoriteNo) {
+        return query.delete(favorite).where(favorite.favoriteNo.eq(favoriteNo)).execute() > 0;
     }
 }

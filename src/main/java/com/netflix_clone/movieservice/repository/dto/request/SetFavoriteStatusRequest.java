@@ -5,6 +5,6 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString
+@ToString(callSuper = true)
 public class SetFavoriteStatusRequest extends FavoriteDto{
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.netflix_clone.movieservice.repository.domain.QContentsDetail.contentsDetail;
 import static com.netflix_clone.movieservice.repository.domain.QContentsInfo.contentsInfo;
@@ -23,6 +24,7 @@ public class WatchedRepositoryImpl extends QuerydslRepositorySupport implements 
         super(Watched.class);
         this.query = query;
     }
+
 
     @Override
     public PageImpl<ContentsInfoDto> watchedContents(PageableRequest request, Pageable pageable) {

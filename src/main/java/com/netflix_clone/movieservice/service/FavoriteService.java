@@ -5,6 +5,7 @@ import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
 import com.netflix_clone.movieservice.repository.domain.Favorite;
+import com.netflix_clone.movieservice.repository.domain.MovieProfile;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.reference.FavoriteDto;
 import com.netflix_clone.movieservice.repository.dto.reference.FavoriteWatchedDto;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Transient;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,6 +35,7 @@ public class FavoriteService {
     private final ImageFeign imageFeign;
     private final ModelMapper mapper;
 
+    @Transactional(readOnly = true)
     public PageImpl<FavoriteWatchedDto> favorites(PageableRequest request) {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
         return (PageImpl<FavoriteWatchedDto>) repository.favorites(request, pageable).map( result -> {
@@ -52,5 +55,9 @@ public class FavoriteService {
         return Optional.ofNullable(repository.save(favorite))
                        .map(Objects::nonNull)
                        .orElseThrow(() -> new CommonException(BecauseOf.SAVE_FAILURE));
+    }
+
+    public Boolean removeFavoriteStatus(Long favoriteNo) {
+        return repository.removeFavoriteStatus(favoriteNo);
     }
 }

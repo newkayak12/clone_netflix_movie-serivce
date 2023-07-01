@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.domain;
 
+import lombok.ToString;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@ToString
 @Entity
 @Table(name = "favorite")
 @DynamicInsert
@@ -18,15 +20,13 @@ public class Favorite {
     @Column(name = "favoriteNo", columnDefinition = "BIGINT(20)")
     private Long favoriteNo;
     @ManyToOne
-    @JoinColumn(name = "favorites")
+    @JoinColumn(name = "profileNo")
     private MovieProfile profile;
     @OneToOne
     @JoinColumn(name = "contentsNo")
     private ContentsInfo contentsInfo;
     @Column(name = "favoriteDate", columnDefinition = "DATETIME default CURRENT_TIMESTAMP()", updatable = false)
     private LocalDateTime favoriteDate;
-    @Column(name = "isFavorite", columnDefinition = "BIT(1) default FALSE")
-    private Boolean isFavorite;
 
 
     @PrePersist

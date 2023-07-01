@@ -7,6 +7,4 @@ import java.util.Optional;
 
 public interface WatchedRepository extends JpaRepository<Watched, Long>, WatchedRepositoryCustom {
 
-    @Override
-    Optional<Watched> save( Watched watched );
 }

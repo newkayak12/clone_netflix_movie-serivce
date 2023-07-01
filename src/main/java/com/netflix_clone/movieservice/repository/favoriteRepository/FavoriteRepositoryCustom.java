@@ -8,4 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface FavoriteRepositoryCustom {
     PageImpl<FavoriteWatchedDto> favorites(PageableRequest request, Pageable pageable);
+    Boolean removeFavoriteStatus(Long favoriteNo);
 }

@@ -1,6 +1,7 @@
 package com.netflix_clone.movieservice.repository.dto.reference;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.netflix_clone.movieservice.component.enums.ContentType;
 import com.netflix_clone.movieservice.repository.domain.Person;
 import com.querydsl.core.annotations.QueryProjection;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class ContentsInfoDto implements Serializable {
     private Long contentsNo;
     private CategoryDto category;

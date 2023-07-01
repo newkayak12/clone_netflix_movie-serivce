@@ -1,15 +1,14 @@
 package com.netflix_clone.movieservice.controller;
 
-import com.netflix_clone.movieservice.component.constant.Constants;
 import com.netflix_clone.movieservice.component.enums.ContentType;
-import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.repository.dto.reference.CategoryDto;
-import com.netflix_clone.movieservice.repository.dto.reference.PersonDto;
 import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
-import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.util.AbstractControllerTest;
 import com.netflix_clone.movieservice.util.TestUtil;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.newkayak.FileUpload.FileResult;
@@ -23,19 +22,14 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
-import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @Transactional(rollbackFor = Exception.class)
@@ -27,7 +29,7 @@ public class WatchedService {
     private final ModelMapper mapper;
 
     public Boolean makeWatched(WatchedDto watchedDto) {
-        return repository.save(mapper.map(watchedDto, Watched.class)).isPresent();
+        return Optional.ofNullable(repository.save(mapper.map(watchedDto, Watched.class))).isPresent();
     }
 
     public PageImpl<ContentsInfoDto> watchedContents(PageableRequest request) {
