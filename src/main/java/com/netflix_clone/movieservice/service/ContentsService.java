@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.newkayak.FileUpload.FileResult;
 import org.newkayak.FileUpload.FileUpload;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.data.domain.PageImpl;
@@ -60,6 +61,7 @@ public class ContentsService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#contentsNo", cacheNames = "content")
     public ContentsInfoDto content(Long contentsNo, MovieProfileDto profileDto) throws CommonException {
         return  repository.content(contentsNo, profileDto)
                 .map(contentsInfoDto -> {

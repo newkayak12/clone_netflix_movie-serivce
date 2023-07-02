@@ -29,20 +29,18 @@ public class Config {
         this.objectMapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
         this.objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
     }
-    private void deserializeRegisterJavaTimeModule() {
-        objectMapper.registerModule(new JavaTimeModule());
-    }
     private void deserializeSettings() {
         this.deserializeWhenEnumCase();
         this.deserializeWhenEmptyCase();
         this.deserializeWhenUnknownCase();
-        this.deserializeRegisterJavaTimeModule();
+//        this.deserializeRegisterJavaTimeModule();
     }
 
     private void serializeSettings() {
         this.objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING,true);
         this.objectMapper.configure(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL,true);
         this.objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false);
+//        this.objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
     }
 
 
@@ -50,7 +48,7 @@ public class Config {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
-    @Bean
+    @Bean(name = "object_mapper")
     public ObjectMapper objectMapper () {
         this.deserializeSettings();
         this.serializeSettings();
