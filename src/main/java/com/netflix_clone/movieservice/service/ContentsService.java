@@ -6,6 +6,7 @@ import com.netflix_clone.movieservice.component.enums.FileType;
 import com.netflix_clone.movieservice.component.enums.Role;
 import com.netflix_clone.movieservice.component.exceptions.BecauseOf;
 import com.netflix_clone.movieservice.component.exceptions.CommonException;
+import com.netflix_clone.movieservice.component.wrap.RestPage;
 import com.netflix_clone.movieservice.repository.contentPersonRepository.ContentPersonRepository;
 import com.netflix_clone.movieservice.repository.contentsDetailRepository.ContentsDetailRepository;
 import com.netflix_clone.movieservice.repository.contentsRepository.ContentsRepository;
@@ -51,13 +52,14 @@ public class ContentsService {
     private final FileUpload upload;
 
     @Transactional(readOnly = true)
-    public PageImpl<ContentsInfoDto> contents(ContentRequest request) {
+    @Cacheable(key = "#request", cacheNames = "content", unless = "#result == null", cacheManager = "gsonCacheManager")
+    public RestPage<ContentsInfoDto> contents(ContentRequest request) {
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getLimit());
-        return (PageImpl<ContentsInfoDto>) repository.contents(request, pageable)
+        return new RestPage<ContentsInfoDto> (repository.contents(request, pageable)
                 .map(contentsInfoDto -> {
                     contentsInfoDto.setImages(imageFeign.files(contentsInfoDto.getContentsNo(), FileType.CONTENTS).getBody());
                     return contentsInfoDto;
-                });
+                }));
     }
 
     @Transactional(readOnly = true)

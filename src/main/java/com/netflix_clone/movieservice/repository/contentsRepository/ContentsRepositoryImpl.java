@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.contentsRepository;
 
+import com.netflix_clone.movieservice.component.wrap.RestPage;
 import com.netflix_clone.movieservice.repository.domain.ContentsInfo;
 import com.netflix_clone.movieservice.repository.dto.reference.*;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
@@ -76,7 +77,7 @@ public class ContentsRepositoryImpl extends QuerydslRepositorySupport implements
 
 
         Long count = from(contentsInfo).where(builder).fetchCount();
-        return new PageImpl<ContentsInfoDto>(list, pageable, count);
+        return new PageImpl<>(list, pageable, count);
     }
 
     @Override

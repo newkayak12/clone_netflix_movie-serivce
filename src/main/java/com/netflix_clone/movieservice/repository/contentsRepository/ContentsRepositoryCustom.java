@@ -1,5 +1,6 @@
 package com.netflix_clone.movieservice.repository.contentsRepository;
 
+import com.netflix_clone.movieservice.component.wrap.RestPage;
 import com.netflix_clone.movieservice.repository.domain.ContentsInfo;
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.reference.MovieProfileDto;
