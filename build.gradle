@@ -82,6 +82,7 @@ dependencies {
 
 //JSR310
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
 
     implementation 'com.github.newkayak12:Dependency-FileUpload:1.0.8'
 

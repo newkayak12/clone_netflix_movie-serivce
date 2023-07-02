@@ -3,6 +3,7 @@ package com.netflix_clone.movieservice.component.configure.objectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.netflix_clone.movieservice.component.configure.ConfigMsg;
 import org.modelmapper.ModelMapper;
@@ -45,7 +46,7 @@ public class Config {
 
 
     private void setJavaModule() {
-        this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.registerModules(new JavaTimeModule(), new Jdk8Module());
     }
 
     @Bean(name = "object_mapper")

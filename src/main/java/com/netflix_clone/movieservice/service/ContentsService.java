@@ -61,7 +61,7 @@ public class ContentsService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "#contentsNo", cacheNames = "content")
+    @Cacheable(key = "#contentsNo", cacheNames = "content", unless = "#result == null", cacheManager = "gsonCacheManager")
     public ContentsInfoDto content(Long contentsNo, MovieProfileDto profileDto) throws CommonException {
         return  repository.content(contentsNo, profileDto)
                 .map(contentsInfoDto -> {
