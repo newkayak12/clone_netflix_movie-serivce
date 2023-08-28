@@ -5,12 +5,10 @@ import com.netflix_clone.movieservice.repository.dto.reference.ContentsDetailDto
 import com.netflix_clone.movieservice.repository.dto.reference.ContentsInfoDto;
 import com.netflix_clone.movieservice.repository.dto.reference.MovieProfileDto;
 import com.netflix_clone.movieservice.repository.dto.request.ContentRequest;
-import com.netflix_clone.movieservice.repository.dto.request.DetailRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1/contents/")
+@RequestMapping(value = "/api/v1/contents")
 @RequiredArgsConstructor
 public class ContentsController {
     private final ContentsService service;

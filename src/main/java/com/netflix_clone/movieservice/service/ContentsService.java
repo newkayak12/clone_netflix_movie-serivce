@@ -102,13 +102,14 @@ public class ContentsService {
         try {
             String path = "";
 
-            if (Objects.nonNull(detailNo)) {
+            if (Objects.isNull(detailNo)) {
                 path = mapper.map(repository.findContentsInfoByContentsNo(contentsNo), ContentsInfoDto.class).getStoredLocation();
             } else {
                 path = mapper.map(detailRepository.findContentsDetailByDetailNo(detailNo), ContentsDetailDto.class).getStoredLocation();
+                log.warn("REPO {}", detailRepository.findContentsDetailByDetailNo(detailNo).toString());
             }
 
-            UrlResource video = new UrlResource(Constants.MOVIE_PATH + path);
+            UrlResource video = new UrlResource("file://"+Constants.MOVIE_PATH+"/origin/" + path);
             final long chunkSize = 1000000L;
             long contentLength = video.contentLength();
 
@@ -131,6 +132,7 @@ public class ContentsService {
                 resourceRegion = new ResourceRegion(video, 0, rangeLength);
             }
         } catch ( Exception e ){
+            e.printStackTrace();
             throw new CommonException(BecauseOf.UNKNOWN_ERROR);
         }
         return resourceRegion;

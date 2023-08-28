@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api/v1/watched/")
+@RequestMapping(value = "/api/v1/watched")
 @RequiredArgsConstructor
 public class WatchedController {
     private final WatchedService service;

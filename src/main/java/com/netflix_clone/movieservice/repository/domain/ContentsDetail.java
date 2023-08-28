@@ -2,6 +2,7 @@ package com.netflix_clone.movieservice.repository.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 @DynamicUpdate
 @Getter
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@ToString
 public class ContentsDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

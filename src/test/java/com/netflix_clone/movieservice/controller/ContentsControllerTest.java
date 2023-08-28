@@ -201,7 +201,7 @@ class ContentsControllerTest extends AbstractControllerTest {
 
         @ParameterizedTest
         @DisplayName(value = "컨텐츠 단일")
-        @ValueSource(ints = 3)
+        @ValueSource(ints = 2)
         void content(int contentsNo) throws Exception {
             mockMvc.perform(
                 get(String.format("%s/%d", prefix, contentsNo))
@@ -213,6 +213,7 @@ class ContentsControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.description").value("React 기초 다지기"))
             .andExpect(jsonPath("$.details").isNotEmpty());
         }
+
 
     }
 
