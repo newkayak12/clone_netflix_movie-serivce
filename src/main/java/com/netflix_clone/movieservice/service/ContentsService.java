@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.newkayak.FileUpload.FileResult;
 import org.newkayak.FileUpload.FileUpload;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.data.domain.PageImpl;
@@ -33,7 +34,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -110,7 +113,7 @@ public class ContentsService {
             }
 
             UrlResource video = new UrlResource("file://"+Constants.MOVIE_PATH+"/origin/" + path);
-            final long chunkSize = 1000000L;
+            final long chunkSize = 2000000L;
             long contentLength = video.contentLength();
 
             Optional<HttpRange> optional = headers.getRange().stream().findFirst();
@@ -136,6 +139,30 @@ public class ContentsService {
             throw new CommonException(BecauseOf.UNKNOWN_ERROR);
         }
         return resourceRegion;
+    }
+
+    @Transactional(readOnly = true)
+    public ByteArrayResource streamByte(HttpHeaders headers, Long contentsNo, Long detailNo) throws CommonException {
+        log.warn("HTTP BYTE?? {}", headers.getRange());
+
+
+        try {
+            String path = "";
+
+            if (Objects.isNull(detailNo)) {
+                path = mapper.map(repository.findContentsInfoByContentsNo(contentsNo), ContentsInfoDto.class).getStoredLocation();
+            } else {
+                path = mapper.map(detailRepository.findContentsDetailByDetailNo(detailNo), ContentsDetailDto.class).getStoredLocation();
+                log.warn("REPO {}", detailRepository.findContentsDetailByDetailNo(detailNo).toString());
+            }
+
+            UrlResource video = new UrlResource("file://"+Constants.MOVIE_PATH+"/origin/" + path);
+            return   new ByteArrayResource(FileCopyUtils.copyToByteArray(new FileInputStream(Constants.MOVIE_PATH+"/origin/" + path)));
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
 
     public ContentsInfoDto saveContentInfo(SaveContentRequest request) {

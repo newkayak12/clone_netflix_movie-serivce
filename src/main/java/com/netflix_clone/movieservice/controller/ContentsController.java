@@ -9,6 +9,7 @@ import com.netflix_clone.movieservice.repository.dto.request.SaveContentRequest;
 import com.netflix_clone.movieservice.repository.dto.request.SaveDetailRequest;
 import com.netflix_clone.movieservice.service.ContentsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +61,20 @@ public class ContentsController {
         ResourceRegion resource = service.stream(headers,contentsNo, detailNo);
         return  ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                 .contentType(MediaTypeFactory.getMediaType(resource.getResource())
-                        .orElse(MediaType.APPLICATION_OCTET_STREAM)
-                ).body(resource);
+                                             .orElse(MediaType.APPLICATION_OCTET_STREAM))
+                .body(resource);
     }
+
+    @GetMapping(value = "/{contentsNo:[\\d]+}/{detailNo:[\\d]+}/byte")
+    public ResponseEntity<ByteArrayResource> streamByte(@RequestHeader HttpHeaders headers,
+                                                 @PathVariable(required = true) Long contentsNo,
+                                                 @PathVariable(required = false) Long detailNo) throws CommonException {
+
+
+        ByteArrayResource resource = service.streamByte(headers,contentsNo, detailNo);
+        return  ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
 }
